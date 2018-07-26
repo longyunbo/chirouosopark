@@ -28,9 +28,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper=false)
 public class PtOrder implements Serializable {
 	
-	// 订单状态0-已付款，1-已退款
+	// 订单状态0-已付款，1-已退款，2-退款失败
 	public static final int ORDERSTATUS_SUCCESS = 0;
 	public static final int ORDERSTATUS_RETURN = 1;
+	public static final int ORDERSTATUS_FAIL = 2;
 	//是否团长 0-不是 1-是
 	public static final int ISHEADER_YES = 1;
 	public static final int ISHEADER_NO = 0;

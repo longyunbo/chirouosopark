@@ -85,6 +85,10 @@ public class MsOrder implements Serializable {
 	 * 商户订单号
 	 */
 	private String outTradeNo;
+	/**
+	 * formId
+	 */
+	private String formId;
 	
 
 }

@@ -29,12 +29,13 @@ public class Xiadan {
 	public static JSONObject wxPay(HttpServletRequest request,String openid,int price) {
 		JSONObject json = new JSONObject();
 		try {
+			String out_trade_no = RandomStringGenerator.getRandomStringByLength(32);
 			OrderInfo order = new OrderInfo();
 			order.setAppid(Configure.appid);
 			order.setMch_id(Configure.mch_id);
 			order.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
 			order.setBody("诸锣记-付款");
-			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
+			order.setOut_trade_no(out_trade_no);
 			order.setTotal_fee(price);
 			order.setSpbill_create_ip(IpUtils.getIpAddr(request));
 			order.setNotify_url("https://zlj.wisdomdr.com/chirouosopark/pay/payresult");
@@ -52,6 +53,7 @@ public class Xiadan {
 			xStream.alias("xml", OrderReturnInfo.class);
 
 			OrderReturnInfo returnInfo = (OrderReturnInfo) xStream.fromXML(result);
+			returnInfo.setOut_trade_no(out_trade_no);
 			JSONObject itemJSONObj = JSONObject.parseObject(JSON.toJSONString(returnInfo));
 			return itemJSONObj;
 		} catch (Exception e) {

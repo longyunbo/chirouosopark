@@ -1,8 +1,10 @@
 package com.drag.ChirouosoPark;
 
-import java.util.HashMap;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Map;
+
+import org.springframework.util.ResourceUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -57,10 +59,20 @@ public class test {
 //		System.out.println(json.toJSONString());
 //		System.out.println(t.sendTemplateMsg(json));
 //		System.out.println(t.getTemplate());
-		int i = 5;
-		System.out.println(-i);
-		
-	        
+//		int i = 5;
+//		System.out.println(-i);
+//		BigDecimal price = new BigDecimal(0.01);
+//		BigDecimal num = new BigDecimal(1);
+//		BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
+//	    System.out.println(totalPrice.intValue());
+		try {
+			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
+			System.out.println(cfgFile.getAbsolutePath());
+			System.out.println(cfgFile.getPath());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
          
 	}
 	

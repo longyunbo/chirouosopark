@@ -82,10 +82,10 @@ public class HttpsUtil {
 		try {
 			httpClient = new SSLClient();
 			httpPost = new HttpPost(url);
-			httpPost.addHeader("Content-Type", "application/json;charset=utf-8");
+			httpPost.addHeader("Content-Type", "application/json");
 			StringEntity se = new StringEntity(jsonstr,"utf-8");
 			se.setContentType("text/json");
-			se.setContentEncoding(new BasicHeader("Content-Type", "application/json;charset=utf-8"));
+			se.setContentEncoding(new BasicHeader("Content-Type", "application/json"));
 			httpPost.setEntity(se);
 			HttpResponse response = httpClient.execute(httpPost);
 			if (response != null) {
