@@ -107,6 +107,7 @@ public class KjGoodsService {
 					User user = userDao.findOne(groupId);
 					userVo.setPrice(pu.getPrice());
 					userVo.setCode(pu.getKjcode());
+					userVo.setStatus(pu.getKjstatus());
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo);
 						grouperList.add(userVo);
@@ -270,6 +271,7 @@ public class KjGoodsService {
 							UserVo userVo = new UserVo();
 							userVo.setPrice(pu.getPrice());
 							userVo.setCode(pu.getKjcode());
+							userVo.setStatus(pu.getKjstatus());
 							int uid = pu.getUid();
 							User user = userDao.findOne(uid);
 							if(user != null) {

@@ -71,4 +71,8 @@ public class UserVo implements Serializable {
 	 * 拼团，砍价，助力编号
 	 */
 	private String code;
+	/**
+	 * 拼团状态0:未付款 1:拼团中，2:拼团成功, 3：拼团失败,
+	 */
+	private int status;
 }

@@ -104,6 +104,7 @@ public class PtGoodsService {
 					UserVo userVo = new UserVo();
 					int groupId = pu.getGrouperId();
 					userVo.setCode(pu.getPtcode());
+					userVo.setStatus(pu.getPtstatus());
 					User user = userDao.findOne(groupId);
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo);
@@ -255,6 +256,7 @@ public class PtGoodsService {
 						UserVo userVo = new UserVo();
 						int uid = pu.getUid();
 						User user = userDao.findOne(uid);
+						userVo.setStatus(pu.getPtstatus());
 						userVo.setCode(pu.getPtcode());
 						if(user != null) {
 							BeanUtils.copyProperties(user, userVo);

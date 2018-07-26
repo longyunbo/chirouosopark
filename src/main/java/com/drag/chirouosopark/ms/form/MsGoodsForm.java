@@ -33,5 +33,10 @@ public class MsGoodsForm {
 	 * 数量
 	 */
 	private int number;
+	/**
+	 * 商户订单号
+	 */
+	private String outTradeNo;
+	
 	
 }

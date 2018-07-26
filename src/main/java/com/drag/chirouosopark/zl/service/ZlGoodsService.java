@@ -102,6 +102,7 @@ public class ZlGoodsService {
 					int groupId = pu.getGrouperId();
 					User user = userDao.findOne(groupId);
 					userVo.setCode(pu.getZlcode());
+					userVo.setStatus(pu.getZlstatus());
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo);
 						grouperList.add(userVo);
@@ -253,6 +254,7 @@ public class ZlGoodsService {
 							int uid = pu.getUid();
 							User user = userDao.findOne(uid);
 							userVo.setCode(pu.getZlcode());
+							userVo.setStatus(pu.getZlstatus());
 							if(user != null) {
 								BeanUtils.copyProperties(user, userVo);
 								grouperList.add(userVo);

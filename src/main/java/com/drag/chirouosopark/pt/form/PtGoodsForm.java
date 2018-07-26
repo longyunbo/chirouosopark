@@ -49,5 +49,9 @@ public class PtGoodsForm {
 	 * formId
 	 */
 	private String formId;
+	/**
+	 * 微信商户订单号
+	 */
+	private String outTradeNo;
 	
 }
