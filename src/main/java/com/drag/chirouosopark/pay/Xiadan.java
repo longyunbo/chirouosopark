@@ -1,5 +1,7 @@
 package com.drag.chirouosopark.pay;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.drag.chirouosopark.pay.common.RandomStringGenerator;
 import com.drag.chirouosopark.pay.common.Signature;
 import com.drag.chirouosopark.pay.model.OrderInfo;
 import com.drag.chirouosopark.pay.model.OrderReturnInfo;
+import com.drag.chirouosopark.utils.IpUtils;
 import com.thoughtworks.xstream.XStream;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Xiadan {
 	private static final Logger L = Logger.getLogger(Xiadan.class);
 
-	public static JSONObject wxPay(String openid,int price) {
+	public static JSONObject wxPay(HttpServletRequest request,String openid,int price) {
 		JSONObject json = new JSONObject();
 		try {
 			OrderInfo order = new OrderInfo();
@@ -33,8 +36,8 @@ public class Xiadan {
 			order.setBody("诸锣记-付款");
 			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
 			order.setTotal_fee(price);
-			order.setSpbill_create_ip("123.57.218.54");
-			order.setNotify_url("https://www.see-source.com/weixinpay/PayResult");
+			order.setSpbill_create_ip(IpUtils.getIpAddr(request));
+			order.setNotify_url("https://zlj.wisdomdr.com/chirouosopark/pay/payresult");
 			order.setTrade_type("JSAPI");
 			order.setOpenid(openid);
 			order.setSign_type("MD5");
