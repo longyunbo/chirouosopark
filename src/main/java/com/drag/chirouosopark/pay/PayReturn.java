@@ -1,24 +1,15 @@
 package com.drag.chirouosopark.pay;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.security.KeyStore;
-
-import javax.net.ssl.SSLContext;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.pay.common.CertHttpUtil;
 import com.drag.chirouosopark.pay.common.Configure;
-import com.drag.chirouosopark.pay.common.HttpRequest;
 import com.drag.chirouosopark.pay.common.RandomStringGenerator;
 import com.drag.chirouosopark.pay.common.Signature;
 import com.drag.chirouosopark.pay.model.PayReturnInfo;
@@ -38,14 +29,7 @@ public class PayReturn {
 	public static JSONObject wxReturn(String out_trade_no,int price) {
 		JSONObject json = new JSONObject();
 		try {
-//			KeyStore keyStore = KeyStore.getInstance("PKCS12");
 			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
-//			InputStream instream = new FileInputStream(cfgFile);
-//			try {
-//				keyStore.load(instream, Configure.mch_id.toCharArray());
-//			} finally {
-//				instream.close();
-//			}
 			String certPath = cfgFile.getPath();
 			
 			//随机生成的退款编号

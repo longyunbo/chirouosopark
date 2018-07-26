@@ -89,7 +89,8 @@ public class IsEndCheckTask {
 							JSONObject returnJson = PayReturn.wxReturn(out_trade_no, totalPrice.intValue());
 							String out_refund_no = returnJson.getString("out_refund_no");
 							String return_code = returnJson.getString("return_code");
-							if(return_code.equals("SUCCESS")) {
+							String result_code = returnJson.getString("result_code");
+							if(return_code.equals("SUCCESS") && result_code.equals("SUCCESS")) {
 								order.setPtrefundcode(out_refund_no);
 								order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
 							}else {
