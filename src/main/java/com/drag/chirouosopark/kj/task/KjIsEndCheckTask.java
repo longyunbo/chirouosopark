@@ -45,23 +45,23 @@ public class KjIsEndCheckTask {
 					kjGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 					kjGoodsDao.saveAndFlush(kjGoods);
 					log.info("定时任务处理成功，更新数据{}", kjGoods);
+					
+					int goodsId = kjGoods.getKjgoodsId();
+					//查询砍价中的人数
+					List<KjUser> kjList = kjUserDao.findByKjGoodsIdAndKjstatus(goodsId,KjUser.PTSTATUS_MIDDLE);
+					//砍价的默认数量为1个 
+					int number = 0;
+					for(KjUser ku : kjList) {
+						//把在砍价中的状态修改成失败
+						ku.setKjstatus(KjUser.PTSTATUS_FAIL);
+						kjUserDao.saveAndFlush(ku);
+						number ++ ;
+					}
+					//回滚库存
+					int kjgoodsNumber = kjGoods.getKjgoodsNumber();
+					kjGoods.setKjgoodsNumber(kjgoodsNumber + number);
+					kjGoodsDao.saveAndFlush(kjGoods);
 				}
-				
-				int goodsId = kjGoods.getKjgoodsId();
-				//查询砍价中的人数
-				List<KjUser> kjList = kjUserDao.findByKjGoodsIdAndKjstatus(goodsId,KjUser.PTSTATUS_MIDDLE);
-				//砍价的默认数量为1个 
-				int number = 0;
-				for(KjUser ku : kjList) {
-					//把在砍价中的状态修改成失败
-					ku.setKjstatus(KjUser.PTSTATUS_FAIL);
-					kjUserDao.saveAndFlush(ku);
-					number ++ ;
-				}
-				//回滚库存
-				int kjgoodsNumber = kjGoods.getKjgoodsNumber();
-				kjGoods.setKjgoodsNumber(kjgoodsNumber + number);
-				kjGoodsDao.saveAndFlush(kjGoods);
 			}
 		} catch (Exception e) {
 			log.error("定时异常{}", e);

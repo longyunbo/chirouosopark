@@ -7,6 +7,7 @@ public class OrderReturnInfo {
     private String appid;
     private String mch_id;
     private String nonce_str;
+    private String out_trade_no;
     private String sign;
     private String prepay_id;
     private String trade_type;
@@ -63,6 +64,12 @@ public class OrderReturnInfo {
 	}
 	public void setTrade_type(String trade_type) {
 		this.trade_type = trade_type;
+	}
+	public String getOut_trade_no() {
+		return out_trade_no;
+	}
+	public void setOut_trade_no(String out_trade_no) {
+		this.out_trade_no = out_trade_no;
 	}
     
 }

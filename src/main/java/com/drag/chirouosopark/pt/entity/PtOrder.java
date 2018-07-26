@@ -93,6 +93,9 @@ public class PtOrder implements Serializable {
 	 * 创建日期
 	 */
 	private Date createTime;
-	
+	/**
+	 * 商户订单号
+	 */
+	private String outTradeNo;
 
 }

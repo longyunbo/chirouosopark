@@ -51,31 +51,31 @@ public class IsEndCheckTask {
 					ptGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 					ptGoodsDao.saveAndFlush(ptGoods);
 					log.info("定时任务处理成功，更新数据{}", ptGoods);
-				}
-				
-				int goodsId = ptGoods.getPtgoodsId();
-				//查询拼团中的人数
-				List<PtUser> ptList = ptUserDao.findByPtGoodsIdAndStatus(goodsId,PtUser.PTSTATUS_MIDDLE);
-				Set<String> ptcodes = new HashSet<String>();
-				for(PtUser ku : ptList) {
-					//把在拼团中的状态的修改成失败
-					ku.setPtstatus(PtUser.PTSTATUS_FAIL);
-					ptUserDao.saveAndFlush(ku);
-					ptcodes.add(ku.getPtcode());
-				}
-				
-				if(ptcodes != null && ptcodes.size() > 0) {
-					//拼团的数量 
-					int allNumber = 0;
-					List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
-					for(PtOrder order : orders) {
-						int number = order.getNumber();
-						allNumber = allNumber + number;
+					
+					int goodsId = ptGoods.getPtgoodsId();
+					//查询拼团中的人数
+					List<PtUser> ptList = ptUserDao.findByPtGoodsIdAndStatus(goodsId,PtUser.PTSTATUS_MIDDLE);
+					Set<String> ptcodes = new HashSet<String>();
+					for(PtUser ku : ptList) {
+						//把在拼团中的状态的修改成失败
+						ku.setPtstatus(PtUser.PTSTATUS_FAIL);
+						ptUserDao.saveAndFlush(ku);
+						ptcodes.add(ku.getPtcode());
 					}
-					//回滚库存
-					int ptgoodsNumber = ptGoods.getPtgoodsNumber();
-					ptGoods.setPtgoodsNumber(ptgoodsNumber + allNumber);
-					ptGoodsDao.saveAndFlush(ptGoods);
+					
+					if(ptcodes != null && ptcodes.size() > 0) {
+						//拼团的数量 
+						int allNumber = 0;
+						List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
+						for(PtOrder order : orders) {
+							int number = order.getNumber();
+							allNumber = allNumber + number;
+						}
+						//回滚库存
+						int ptgoodsNumber = ptGoods.getPtgoodsNumber();
+						ptGoods.setPtgoodsNumber(ptgoodsNumber + allNumber);
+						ptGoodsDao.saveAndFlush(ptGoods);
+					}
 				}
 			}
 		} catch (Exception e) {

@@ -118,10 +118,6 @@ public class PtGoods implements Serializable {
 	 * 活动权限
 	 */
 	private String auth;
-	/**
-	 * 商户订单号
-	 */
-	private String outTradeNo;
 	
 
 }
