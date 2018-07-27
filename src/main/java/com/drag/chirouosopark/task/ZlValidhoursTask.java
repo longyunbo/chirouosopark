@@ -18,7 +18,7 @@ import com.drag.chirouosopark.zl.entity.ZlUser;
 
 import lombok.extern.slf4j.Slf4j;
 /**
- * 定时任务查询助力团长的创建时间是否过期
+ * 定时任务查询助力有效期
  * @author longyunbo
  *
  */
@@ -31,7 +31,7 @@ public class ZlValidhoursTask {
 	@Autowired
 	ZlUserDao zlUserDao;
 	
-	@Scheduled(cron = "${jobs.isEndCheckTask.schedule}")
+	@Scheduled(cron = "${jobs.hoursCheckTask.schedule}")
 	@Transactional
 	public void find() {
 		

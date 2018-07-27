@@ -1,11 +1,8 @@
 package com.drag.chirouosopark.task;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -13,17 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.common.exception.AMPException;
 import com.drag.chirouosopark.kj.dao.KjGoodsDao;
 import com.drag.chirouosopark.kj.dao.KjUserDao;
 import com.drag.chirouosopark.kj.entity.KjGoods;
 import com.drag.chirouosopark.kj.entity.KjUser;
-import com.drag.chirouosopark.pay.PayReturn;
 
 import lombok.extern.slf4j.Slf4j;
 /**
- * 定时任务查询砍价团长的创建时间是否过期
+ * 定时任务查询砍价有效期
  * @author longyunbo
  *
  */
@@ -36,7 +31,7 @@ public class KjValidhoursTask {
 	@Autowired
 	KjUserDao kjUserDao;
 	
-	@Scheduled(cron = "${jobs.isEndCheckTask.schedule}")
+	@Scheduled(cron = "${jobs.hoursCheckTask.schedule}")
 	@Transactional
 	public void find() {
 		

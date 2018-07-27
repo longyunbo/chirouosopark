@@ -25,7 +25,7 @@ import com.drag.chirouosopark.pt.entity.PtUser;
 
 import lombok.extern.slf4j.Slf4j;
 /**
- * 定时任务查询拼团团长的创建时间是否过期
+ * 定时任务查询拼团有效期，退款
  * @author longyunbo
  *
  */
@@ -40,7 +40,7 @@ public class PtValidhoursTask {
 	@Autowired
 	PtOrderDao ptOrderDao;
 	
-	@Scheduled(cron = "${jobs.isEndCheckTask.schedule}")
+	@Scheduled(cron = "${jobs.hoursCheckTask.schedule}")
 	@Transactional
 	public void find() {
 		

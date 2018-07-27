@@ -4,8 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,14 +15,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.drag.chirouosopark.common.BaseResponse;
 import com.drag.chirouosopark.pay.PayResult;
 import com.drag.chirouosopark.pay.Sign;
 import com.drag.chirouosopark.pay.Xiadan;
+import com.drag.chirouosopark.pay.form.PayCheckForm;
+import com.drag.chirouosopark.pay.service.PayService;
 
 
 @RestController
 @RequestMapping(value = "/chirouosopark/pay")
 public class PayController {
+	
+	@Autowired
+	PayService payService;
 	
 	private final static Logger log = LoggerFactory.getLogger(PayController.class);
 	
@@ -40,6 +48,13 @@ public class PayController {
 	public @ResponseBody ResponseEntity<String> payResult(HttpServletRequest request) {
 		String Json = PayResult.payResult(request);
 		return new ResponseEntity<String>(Json, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/checkall", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody ResponseEntity<BaseResponse> checkAuth(@RequestBody PayCheckForm form) {
+		BaseResponse resp = null;
+		resp = payService.checkAll(form);
+		return new ResponseEntity<BaseResponse>(resp, HttpStatus.OK);
 	}
 	
 }
