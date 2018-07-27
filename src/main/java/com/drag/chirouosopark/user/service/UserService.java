@@ -3,7 +3,11 @@ package com.drag.chirouosopark.user.service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -137,6 +141,21 @@ public class UserService {
 		User user = userDao.findByOpenid(openid);
 		int uid = user.getId();
 		List<PtUser> ptList = ptUserDao.findByUid(uid);
+		
+		Set<Integer> ids = new HashSet<Integer>();
+		for(PtUser us : ptList) {
+			ids.add(us.getUid());
+			ids.add(us.getGrouperId());
+		}
+		
+		Map<Integer,String> userMap = new HashMap<Integer,String>();
+		if(ids != null && ids.size() > 0) {
+			List<User> userList = userDao.findByIdIn(ids);
+			for(User us : userList) {
+				userMap.put(us.getId(), us.getOpenid());
+			}
+		}
+		
 		for(PtUser pt : ptList) {
 			int goodsId = pt.getPtgoodsId();
 			PtGoods goods = ptGoodsDao.findGoodsDetail(goodsId);
@@ -160,10 +179,25 @@ public class UserService {
 			vo.setIsEnd(goods.getIsEnd());
 			vo.setTimes(goods.getPtTimes());
 			vo.setSuccTimes(goods.getPtSuccTimes());
+			vo.setCode(pt.getPtcode());
+			vo.setUid(userMap.get(pt.getUid()));
+			vo.setGrouperId(userMap.get(pt.getGrouperId()));
 			actList.add(vo);
 		}
 		
 		List<KjUser> kjList = kjUserDao.findByUid(uid);
+		Set<Integer> kjIds = new HashSet<Integer>();
+		for(KjUser us : kjList) {
+			kjIds.add(us.getUid());
+			kjIds.add(us.getGrouperId());
+		}
+		Map<Integer,String> kjUserMap = new HashMap<Integer,String>();
+		if(kjIds != null && kjIds.size() > 0) {
+			List<User> userList = userDao.findByIdIn(kjIds);
+			for(User us : userList) {
+				kjUserMap.put(us.getId(), us.getOpenid());
+			}
+		}
 		for(KjUser kj : kjList) {
 			int goodsId = kj.getKjgoodsId();
 			KjGoods goods = kjGoodsDao.findGoodsDetail(goodsId);
@@ -187,10 +221,27 @@ public class UserService {
 			vo.setIsEnd(goods.getIsEnd());
 			vo.setTimes(goods.getKjTimes());
 			vo.setSuccTimes(goods.getKjSuccTimes());
+			vo.setCode(kj.getKjcode());
+			vo.setUid(kjUserMap.get(kj.getUid()));
+			vo.setGrouperId(kjUserMap.get(kj.getGrouperId()));
 			actList.add(vo);
 		}
-		List<ZlUser> ZlList = zlUserDao.findByUid(uid);
-		for(ZlUser zl : ZlList) {
+		List<ZlUser> zlList = zlUserDao.findByUid(uid);
+		
+		Set<Integer> zlIds = new HashSet<Integer>();
+		for(ZlUser us : zlList) {
+			zlIds.add(us.getUid());
+			zlIds.add(us.getGrouperId());
+		}
+		Map<Integer,String> zlUserMap = new HashMap<Integer,String>();
+		if(zlIds != null && zlIds.size() > 0) {
+			List<User> userList = userDao.findByIdIn(zlIds);
+			for(User us : userList) {
+				zlUserMap.put(us.getId(), us.getOpenid());
+			}
+		}
+		
+		for(ZlUser zl : zlList) {
 			int goodsId = zl.getZlgoodsId();
 			ZlGoods goods = zlGoodsDao.findGoodsDetail(goodsId);
 			ActivityVo vo = new ActivityVo(); 
@@ -213,6 +264,9 @@ public class UserService {
 			vo.setIsEnd(goods.getIsEnd());
 			vo.setTimes(goods.getZlTimes());
 			vo.setSuccTimes(goods.getZlSuccTimes());
+			vo.setCode(zl.getZlcode());
+			vo.setUid(zlUserMap.get(zl.getUid()));
+			vo.setGrouperId(zlUserMap.get(zl.getGrouperId()));
 			actList.add(vo);
 		}
 		return actList;

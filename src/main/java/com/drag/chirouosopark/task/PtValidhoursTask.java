@@ -22,6 +22,7 @@ import com.drag.chirouosopark.pt.dao.PtUserDao;
 import com.drag.chirouosopark.pt.entity.PtGoods;
 import com.drag.chirouosopark.pt.entity.PtOrder;
 import com.drag.chirouosopark.pt.entity.PtUser;
+import com.drag.chirouosopark.utils.StringUtil;
 
 import lombok.extern.slf4j.Slf4j;
 /**
@@ -76,24 +77,27 @@ public class PtValidhoursTask {
 				if(ptcodes != null && ptcodes.size() > 0) {
 					List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
 					for(PtOrder order : orders) {
-						String out_trade_no = order.getOutTradeNo();
-						BigDecimal num = new BigDecimal(order.getNumber());
-						BigDecimal price = order.getPrice();
-						//单位以分计算
-						BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
-						//退款
-						JSONObject returnJson = PayReturn.wxReturn(out_trade_no, totalPrice.intValue());
-						String out_refund_no = returnJson.getString("out_refund_no");
-						String return_code = returnJson.getString("return_code");
-						String result_code = returnJson.getString("result_code");
-						if(return_code.equals("SUCCESS") && result_code.equals("SUCCESS")) {
-							order.setPtrefundcode(out_refund_no);
-							order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
-						}else {
-							order.setPtrefundcode(out_refund_no);
-							order.setOrderstatus(PtOrder.ORDERSTATUS_FAIL);
+						String ptrefundcode = order.getPtrefundcode();
+						if(StringUtil.isEmpty(ptrefundcode)) {
+							String out_trade_no = order.getOutTradeNo();
+							BigDecimal num = new BigDecimal(order.getNumber());
+							BigDecimal price = order.getPrice();
+							//单位以分计算
+							BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
+							//退款
+							JSONObject returnJson = PayReturn.wxReturn(out_trade_no, totalPrice.intValue());
+							String out_refund_no = returnJson.getString("out_refund_no");
+							String return_code = returnJson.getString("return_code");
+							String result_code = returnJson.getString("result_code");
+							if(return_code.equals("SUCCESS") && result_code.equals("SUCCESS")) {
+								order.setPtrefundcode(out_refund_no);
+								order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
+							}else {
+								order.setPtrefundcode(out_refund_no);
+								order.setOrderstatus(PtOrder.ORDERSTATUS_FAIL);
+							}
+							ptOrderDao.saveAndFlush(order);
 						}
-						ptOrderDao.saveAndFlush(order);
 					}
 				}
 			}

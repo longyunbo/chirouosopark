@@ -1,6 +1,7 @@
 package com.drag.chirouosopark.user.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,5 +18,5 @@ public interface UserDao extends JpaRepository<User, String>, JpaSpecificationEx
 	User findByOpenid(String openid);
 	
 	@Query(value = "select * from t_user where id in (?1) ", nativeQuery = true)
-	List<User> findByIdIn(List<Integer> id);
+	List<User> findByIdIn(Set<Integer> id);
 }

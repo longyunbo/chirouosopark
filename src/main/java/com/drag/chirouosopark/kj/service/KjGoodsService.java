@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -447,7 +449,7 @@ public class KjGoodsService {
 					UserTicketTemplate  template = userTicketTemplateDao.findByGoodsIdAndType(goods.getKjgoodsId(), type);
 					
 					Map<String,User> userMap = new HashMap<String,User>();
-					List<Integer> ids = new ArrayList<>();
+					Set<Integer> ids = new HashSet<Integer>();
 					
 					KjUser grouper = null;
 					for(KjUser user : kjList) {

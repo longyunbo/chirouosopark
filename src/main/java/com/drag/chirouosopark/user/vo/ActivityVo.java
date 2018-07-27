@@ -99,5 +99,11 @@ public class ActivityVo{
 	 * 状态
 	 */
 	private int status;
+	
+	private String code;
+	
+	private String uid;
+	
+	private String grouperId;
 }
 
