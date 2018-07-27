@@ -94,7 +94,10 @@ public class KjGoodsDetailVo{
 	 * 完成砍价人数
 	 */
 	private int kjSuccTimes;
-	
+	/**
+	 * 活动权限
+	 */
+	private String auth;
 	/**
 	 * 团长
 	 */

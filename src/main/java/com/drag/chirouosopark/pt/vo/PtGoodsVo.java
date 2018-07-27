@@ -92,5 +92,9 @@ public class PtGoodsVo{
 	 * 完成拼团人数
 	 */
 	private int ptSuccTimes;
+	/**
+	 * 活动权限
+	 */
+	private String auth;
 }
 

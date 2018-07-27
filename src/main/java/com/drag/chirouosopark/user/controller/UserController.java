@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.drag.chirouosopark.pt.entity.PtGoods;
+import com.drag.chirouosopark.user.dao.UserDao;
+import com.drag.chirouosopark.user.entity.User;
 import com.drag.chirouosopark.user.form.UserForm;
 import com.drag.chirouosopark.user.resp.UserResp;
 import com.drag.chirouosopark.user.service.UserService;
@@ -30,17 +33,20 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserDao userDao;
 	
 	/**
 	 * 查询用户权限
 	 * @return
 	 */
-//	@RequestMapping(value = "/checkauth", method = {RequestMethod.POST,RequestMethod.GET})
-//	public @ResponseBody ResponseEntity<Boolean> checkAuth(@RequestParam(required = true) String openid) {
-//		Boolean auth = false;
-//		auth = userService.checkAuth(openid);
-//		return new ResponseEntity<Boolean>(auth, HttpStatus.OK);
-//	}
+	@RequestMapping(value = "/checkauth", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody ResponseEntity<Boolean> checkAuth(@RequestParam(required = true) String openid,@RequestParam(required = true) String authIds) {
+		Boolean auth = false;
+		User user = userDao.findByOpenid(openid);
+		auth =  userService.checkAuth(user, authIds);
+		return new ResponseEntity<Boolean>(auth, HttpStatus.OK);
+	}
 	
 	/**
 	 * 根据code获取openid

@@ -91,5 +91,9 @@ public class ZlGoodsVo{
 	 * 完成助力人数
 	 */
 	private int zlSuccTimes;
+	/**
+	 * 活动权限
+	 */
+	private String auth;
 }
 
