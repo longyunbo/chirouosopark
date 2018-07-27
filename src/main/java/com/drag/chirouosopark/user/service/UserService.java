@@ -101,7 +101,7 @@ public class UserService {
 			
 			BeanUtils.copyProperties(form, user);
 			user.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			user.setRankLevel(1);
+			user.setRankLevel(0);
 			userDao.save(user);
 			baseResp.setReturnCode(Constant.SUCCESS);
 			baseResp.setErrorMessage("新增用户成功!");

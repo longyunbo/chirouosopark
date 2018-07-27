@@ -2,7 +2,9 @@ package com.drag.chirouosopark.task;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -11,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.drag.chirouosopark.common.exception.AMPException;
+import com.drag.chirouosopark.pt.entity.PtUser;
 import com.drag.chirouosopark.zl.dao.ZlGoodsDao;
 import com.drag.chirouosopark.zl.dao.ZlUserDao;
 import com.drag.chirouosopark.zl.entity.ZlGoods;
@@ -42,13 +45,21 @@ public class ZlValidhoursTask {
 				//拼团有效时间，默认为24小时
 				int zlValidhours = zlGoods.getZlValidhours();
 				int goodsId = zlGoods.getZlgoodsId();
-				//根据商品编号查询出砍价中的用户
-				List<ZlUser> userList = zlUserDao.findByZlGoodsIdAndZlstatus(goodsId, ZlUser.PTSTATUS_MIDDLE);
+				//根据商品编号查询出砍价中的团长用户
+				List<ZlUser> userList = zlUserDao.findByZlGoodsIdAndZlstatusAndIsHeader(goodsId, ZlUser.PTSTATUS_MIDDLE,ZlUser.ISHEADER_YES);
+				Set<String> zlcodes = new HashSet<String>();
 				if(userList != null && userList.size() > 0) {
 					for(ZlUser user : userList) {
 						Date createTime =  user.getCreateTime();
 						long compareDate = (nowTime.getTime() - createTime.getTime()) / (60*60*1000);
 						if(compareDate >= zlValidhours) {
+							//修改为砍价失败
+							zlcodes.add(user.getZlcode());
+						}
+					}
+					List<ZlUser> childList =  zlUserDao.findByZlCodeIn(zlcodes);
+					if(childList != null && childList.size() > 0) {
+						for(ZlUser user : childList) {
 							//修改为砍价失败
 							user.setZlstatus(ZlUser.PTSTATUS_FAIL);
 							zlUserDao.saveAndFlush(user);

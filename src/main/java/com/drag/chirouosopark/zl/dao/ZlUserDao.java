@@ -1,6 +1,7 @@
 package com.drag.chirouosopark.zl.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,6 +20,9 @@ public interface ZlUserDao extends JpaRepository<ZlUser, String>, JpaSpecificati
 	@Query(value = "select * from zl_user where zlgoods_id = ?1 and zlstatus = ?2", nativeQuery = true)
 	List<ZlUser> findByZlGoodsIdAndZlstatus(int goodsId,int zlstatus);
 	
+	@Query(value = "select * from zl_user where zlgoods_id = ?1 and zlstatus = ?2 and is_header = ?3", nativeQuery = true)
+	List<ZlUser> findByZlGoodsIdAndZlstatusAndIsHeader(int goodsId,int zlstatus,int isHead);
+	
 	@Query(value = "select * from zl_user where zlgoods_id = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<ZlUser> findByZlGoodsIdAndIsHead(int goodsId,int isHead);
 	
@@ -30,6 +34,9 @@ public interface ZlUserDao extends JpaRepository<ZlUser, String>, JpaSpecificati
 	
 	@Query(value = "select * from zl_user where zlcode = ?1 order by create_time desc", nativeQuery = true)
 	List<ZlUser> findByZlCode(String zlCode);
+	
+	@Query(value = "select * from zl_user where zlcode in (?1) order by create_time desc", nativeQuery = true)
+	List<ZlUser> findByZlCodeIn(Set<String> zlcodes);
 	
 	@Query(value = "select * from zl_user where zlcode = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<ZlUser> findByZlCodeAndIsHead(String zlCode,int isHead);

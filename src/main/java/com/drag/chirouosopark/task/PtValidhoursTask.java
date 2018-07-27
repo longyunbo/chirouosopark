@@ -51,8 +51,8 @@ public class PtValidhoursTask {
 				//拼团有效时间，默认为24小时
 				int ptValidhours = ptGoods.getPtValidhours();
 				int goodsId = ptGoods.getPtgoodsId();
-				//根据商品编号查询出拼团中的用户
-				List<PtUser> userList = ptUserDao.findByPtGoodsIdAndStatus(goodsId, PtUser.PTSTATUS_MIDDLE);
+				//根据商品编号查询出拼团中的团长，如果团长的创建时间过期了，把整个拼团的关掉
+				List<PtUser> userList = ptUserDao.findByGoodsIdAndStatusAndIsHeader(goodsId, PtUser.PTSTATUS_MIDDLE,PtUser.ISHEADER_YES);
 				Set<String> ptcodes = new HashSet<String>();
 				if(userList != null && userList.size() > 0) {
 					for(PtUser user : userList) {
@@ -60,9 +60,14 @@ public class PtValidhoursTask {
 						long compareDate = (nowTime.getTime() - createTime.getTime()) / (60*60*1000);
 						if(compareDate >= ptValidhours) {
 							//修改为拼团失败
+							ptcodes.add(user.getPtcode());
+						}
+					}
+					List<PtUser> childList =  ptUserDao.findByPtCodeIn(ptcodes);
+					if(childList != null && childList.size() > 0) {
+						for(PtUser user : childList) {
 							user.setPtstatus(PtUser.PTSTATUS_FAIL);
 							ptUserDao.saveAndFlush(user);
-							ptcodes.add(user.getPtcode());
 						}
 					}
 				}

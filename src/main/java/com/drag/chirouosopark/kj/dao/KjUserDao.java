@@ -1,6 +1,7 @@
 package com.drag.chirouosopark.kj.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,6 +20,9 @@ public interface KjUserDao extends JpaRepository<KjUser, String>, JpaSpecificati
 	@Query(value = "select * from kj_user where kjgoods_id = ?1 and kjstatus = ?2", nativeQuery = true)
 	List<KjUser> findByKjGoodsIdAndKjstatus(int goodsId,int kjstatus);
 	
+	@Query(value = "select * from kj_user where kjgoods_id = ?1 and kjstatus = ?2 and is_header = ?3", nativeQuery = true)
+	List<KjUser> findByKjGoodsIdAndKjstatusAndIsHeader(int goodsId,int kjstatus,int isHead);
+	
 	@Query(value = "select * from kj_user where kjgoods_id = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<KjUser> findByKjGoodsIdAndIsHead(int goodsId,int isHead);
 	
@@ -30,6 +34,9 @@ public interface KjUserDao extends JpaRepository<KjUser, String>, JpaSpecificati
 	
 	@Query(value = "select * from kj_user where kjcode = ?1 order by create_time desc", nativeQuery = true)
 	List<KjUser> findByKjCode(String kjCode);
+	
+	@Query(value = "select * from kj_user where kjcode in (?1) order by create_time desc", nativeQuery = true)
+	List<KjUser> findByKjCodeIn(Set<String> kjCodes);
 	
 	@Query(value = "select * from kj_user where kjcode = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<KjUser> findByKjCodeAndIsHead(String kjCode,int isHead);
