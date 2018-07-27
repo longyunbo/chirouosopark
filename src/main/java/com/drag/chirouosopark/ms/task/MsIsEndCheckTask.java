@@ -29,14 +29,16 @@ public class MsIsEndCheckTask {
 	public void find() {
 		try {
 			List<MsGoods> MsGoodsList = msGoodsDao.findByIsEnd(0);
-			for (MsGoods msGoods : MsGoodsList) {
-				Date endTime = msGoods.getEndTime();
-				Date nowTime = new Timestamp(System.currentTimeMillis());
-				if(nowTime.after(endTime)) {
-					msGoods.setIsEnd(1);
-					msGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-					msGoodsDao.saveAndFlush(msGoods);
-					log.info("定时任务处理成功，更新数据{}", msGoods);
+			if(MsGoodsList != null && MsGoodsList.size() > 0) {
+				for (MsGoods msGoods : MsGoodsList) {
+					Date endTime = msGoods.getEndTime();
+					Date nowTime = new Timestamp(System.currentTimeMillis());
+					if(nowTime.after(endTime)) {
+						msGoods.setIsEnd(1);
+						msGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+						msGoodsDao.saveAndFlush(msGoods);
+						log.info("定时任务处理成功，更新数据{}", msGoods);
+					}
 				}
 			}
 		} catch (Exception e) {

@@ -57,12 +57,14 @@ public class KjValidhoursTask {
 							kjcodes.add(user.getKjcode());
 						}
 					}
-					List<KjUser> childList =  kjUserDao.findByKjCodeIn(kjcodes);
-					if(childList != null && childList.size() > 0) {
-						for(KjUser user : childList) {
-							//修改为砍价失败
-							user.setKjstatus(ZlUser.PTSTATUS_FAIL);
-							kjUserDao.saveAndFlush(user);
+					if(kjcodes != null && kjcodes.size() >0) {
+						List<KjUser> childList =  kjUserDao.findByKjCodeIn(kjcodes);
+						if(childList != null && childList.size() > 0) {
+							for(KjUser user : childList) {
+								//修改为砍价失败
+								user.setKjstatus(ZlUser.PTSTATUS_FAIL);
+								kjUserDao.saveAndFlush(user);
+							}
 						}
 					}
 				}

@@ -80,12 +80,12 @@ public class PayService {
 			}
 			//获取系统用户编号
 			int uid = user.getId();
-			List<PtUser> ptList = ptUserDao.findByUidAndPtgoodsIdAndIsHeadAndPtstatus(uid, goodsId, PtUser.ISHEADER_YES, PtUser.PTSTATUS_MIDDLE);
-			if(ptList != null && ptList.size() > 0) {
-				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
-				baseResp.setErrorMessage("该用户已经拼过此团，请完成后再拼团!");
-				return baseResp;
-			}
+//			List<PtUser> ptList = ptUserDao.findByUidAndPtgoodsIdAndIsHeadAndPtstatus(uid, goodsId, PtUser.ISHEADER_YES, PtUser.PTSTATUS_MIDDLE);
+//			if(ptList != null && ptList.size() > 0) {
+//				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
+//				baseResp.setErrorMessage("该用户已经拼过此团，请完成后再拼团!");
+//				return baseResp;
+//			}
 			
 			String code = form.getCode();
 			if(!StringUtil.isEmpty(code)) {

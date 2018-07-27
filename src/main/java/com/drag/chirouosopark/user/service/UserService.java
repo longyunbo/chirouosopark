@@ -196,7 +196,7 @@ public class UserService {
 			ActivityVo vo = new ActivityVo(); 
 			vo.setGoodsId(goodsId);
 			vo.setGoodsName(goods.getZlgoodsName());
-			vo.setType(Constant.TYPE_KJ);
+			vo.setType(Constant.TYPE_ZL);
 			vo.setStatus(zl.getZlstatus());
 			vo.setPrice(BigDecimal.ZERO);
 			vo.setDefPrice(goods.getZlPrice());

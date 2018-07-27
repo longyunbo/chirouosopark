@@ -52,60 +52,64 @@ public class IsEndCheckTask {
 		try {
 			Date nowTime = new Timestamp(System.currentTimeMillis());
 			List<PtGoods> ptGoodsList = ptGoodsDao.findByIsEnd(0);
-			for (PtGoods ptGoods : ptGoodsList) {
-				Date endTime = ptGoods.getEndTime();
-				if(nowTime.after(endTime)) {
-					ptGoods.setIsEnd(1);
-					ptGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-					ptGoodsDao.saveAndFlush(ptGoods);
-					log.info("定时任务处理成功，更新数据{}", ptGoods);
-					
-					int goodsId = ptGoods.getPtgoodsId();
-					//查询拼团中的人数
-					List<PtUser> ptList = ptUserDao.findByPtGoodsIdAndStatus(goodsId,PtUser.PTSTATUS_MIDDLE);
-					Set<String> ptcodes = new HashSet<String>();
-					for(PtUser ku : ptList) {
-						//把在拼团中的状态的修改成失败
-						ku.setPtstatus(PtUser.PTSTATUS_FAIL);
-						ptUserDao.saveAndFlush(ku);
-						ptcodes.add(ku.getPtcode());
-					}
-					
-					if(ptcodes != null && ptcodes.size() > 0) {
-						//拼团的数量 
-						int allNumber = 0;
-						List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
-						
-						for(PtOrder order : orders) {
-							int number = order.getNumber();
-							allNumber = allNumber + number;
-							
-							String out_trade_no = order.getOutTradeNo();
-							BigDecimal num = new BigDecimal(order.getNumber());
-							BigDecimal price = order.getPrice();
-							//单位以分计算
-							BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
-							//退款
-							JSONObject returnJson = PayReturn.wxReturn(out_trade_no, totalPrice.intValue());
-							String out_refund_no = returnJson.getString("out_refund_no");
-							String return_code = returnJson.getString("return_code");
-							String result_code = returnJson.getString("result_code");
-							if(return_code.equals("SUCCESS") && result_code.equals("SUCCESS")) {
-								order.setPtrefundcode(out_refund_no);
-								order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
-							}else {
-								order.setPtrefundcode(out_refund_no);
-								order.setOrderstatus(PtOrder.ORDERSTATUS_FAIL);
-							}
-							ptOrderDao.saveAndFlush(order);
-							
-						}
-						//回滚库存
-						int ptgoodsNumber = ptGoods.getPtgoodsNumber();
-						ptGoods.setPtgoodsNumber(ptgoodsNumber + allNumber);
+			if(ptGoodsList != null && ptGoodsList.size() > 0) {
+				for (PtGoods ptGoods : ptGoodsList) {
+					Date endTime = ptGoods.getEndTime();
+					if(nowTime.after(endTime)) {
+						ptGoods.setIsEnd(1);
+						ptGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 						ptGoodsDao.saveAndFlush(ptGoods);
+						log.info("定时任务处理成功，更新数据{}", ptGoods);
+						
+						int goodsId = ptGoods.getPtgoodsId();
+						//查询拼团中的人数
+						List<PtUser> ptList = ptUserDao.findByPtGoodsIdAndStatus(goodsId,PtUser.PTSTATUS_MIDDLE);
+						Set<String> ptcodes = new HashSet<String>();
+						if(ptList != null && ptList.size() > 0) {
+							for(PtUser ku : ptList) {
+								//把在拼团中的状态的修改成失败
+								ku.setPtstatus(PtUser.PTSTATUS_FAIL);
+								ptUserDao.saveAndFlush(ku);
+								ptcodes.add(ku.getPtcode());
+							}
+						}
+						
+						if(ptcodes != null && ptcodes.size() > 0) {
+							//拼团的数量 
+							int allNumber = 0;
+							List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
+							
+							for(PtOrder order : orders) {
+								int number = order.getNumber();
+								allNumber = allNumber + number;
+								
+								String out_trade_no = order.getOutTradeNo();
+								BigDecimal num = new BigDecimal(order.getNumber());
+								BigDecimal price = order.getPrice();
+								//单位以分计算
+								BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
+								//退款
+								JSONObject returnJson = PayReturn.wxReturn(out_trade_no, totalPrice.intValue());
+								String out_refund_no = returnJson.getString("out_refund_no");
+								String return_code = returnJson.getString("return_code");
+								String result_code = returnJson.getString("result_code");
+								if(return_code.equals("SUCCESS") && result_code.equals("SUCCESS")) {
+									order.setPtrefundcode(out_refund_no);
+									order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
+								}else {
+									order.setPtrefundcode(out_refund_no);
+									order.setOrderstatus(PtOrder.ORDERSTATUS_FAIL);
+								}
+								ptOrderDao.saveAndFlush(order);
+								
+							}
+							//回滚库存
+							int ptgoodsNumber = ptGoods.getPtgoodsNumber();
+							ptGoods.setPtgoodsNumber(ptgoodsNumber + allNumber);
+							ptGoodsDao.saveAndFlush(ptGoods);
+						}
+						
 					}
-					
 				}
 			}
 		} catch (Exception e) {

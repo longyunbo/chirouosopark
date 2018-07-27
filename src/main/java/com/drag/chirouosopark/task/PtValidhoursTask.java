@@ -63,11 +63,13 @@ public class PtValidhoursTask {
 							ptcodes.add(user.getPtcode());
 						}
 					}
-					List<PtUser> childList =  ptUserDao.findByPtCodeIn(ptcodes);
-					if(childList != null && childList.size() > 0) {
-						for(PtUser user : childList) {
-							user.setPtstatus(PtUser.PTSTATUS_FAIL);
-							ptUserDao.saveAndFlush(user);
+					if(ptcodes != null && ptcodes.size() > 0) {
+						List<PtUser> childList =  ptUserDao.findByPtCodeIn(ptcodes);
+						if(childList != null && childList.size() > 0) {
+							for(PtUser user : childList) {
+								user.setPtstatus(PtUser.PTSTATUS_FAIL);
+								ptUserDao.saveAndFlush(user);
+							}
 						}
 					}
 				}

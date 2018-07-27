@@ -38,28 +38,32 @@ public class ZlIsEndCheckTask {
 		try {
 			Date nowTime = new Timestamp(System.currentTimeMillis());
 			List<ZlGoods> ZlGoodsList = zlGoodsDao.findByIsEnd(0);
-			for (ZlGoods zlGoods : ZlGoodsList) {
-				Date endTime = zlGoods.getEndTime();
-				if(nowTime.after(endTime)) {
-					zlGoods.setIsEnd(1);
-					zlGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-					zlGoodsDao.saveAndFlush(zlGoods);
-					log.info("定时任务处理成功，更新数据{}", zlGoods);
-					int goodsId = zlGoods.getZlgoodsId();
-					//查询助力中的人数
-					List<ZlUser> zlList = zlUserDao.findByZlGoodsIdAndZlstatus(goodsId,ZlUser.PTSTATUS_MIDDLE);
-					//助力的默认数量为1个 
-					int number = 0;
-					for(ZlUser ku : zlList) {
-						//把在助力中的状态的修改成失败
-						ku.setZlstatus(ZlUser.PTSTATUS_FAIL);
-						zlUserDao.saveAndFlush(ku);
-						number ++ ;
+			if(ZlGoodsList != null && ZlGoodsList.size() >0) {
+				for (ZlGoods zlGoods : ZlGoodsList) {
+					Date endTime = zlGoods.getEndTime();
+					if(nowTime.after(endTime)) {
+						zlGoods.setIsEnd(1);
+						zlGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+						zlGoodsDao.saveAndFlush(zlGoods);
+						log.info("定时任务处理成功，更新数据{}", zlGoods);
+						int goodsId = zlGoods.getZlgoodsId();
+						//查询助力中的人数
+						List<ZlUser> zlList = zlUserDao.findByZlGoodsIdAndZlstatus(goodsId,ZlUser.PTSTATUS_MIDDLE);
+						//助力的默认数量为1个 
+						int number = 0;
+						if(zlList != null && zlList.size() >0) {
+							for(ZlUser ku : zlList) {
+								//把在助力中的状态的修改成失败
+								ku.setZlstatus(ZlUser.PTSTATUS_FAIL);
+								zlUserDao.saveAndFlush(ku);
+								number ++ ;
+							}
+							//回滚库存
+							int zlgoodsNumber = zlGoods.getZlgoodsNumber();
+							zlGoods.setZlgoodsNumber(zlgoodsNumber + number);
+							zlGoodsDao.saveAndFlush(zlGoods);
+						}
 					}
-					//回滚库存
-					int zlgoodsNumber = zlGoods.getZlgoodsNumber();
-					zlGoods.setZlgoodsNumber(zlgoodsNumber + number);
-					zlGoodsDao.saveAndFlush(zlGoods);
 				}
 			}
 		} catch (Exception e) {

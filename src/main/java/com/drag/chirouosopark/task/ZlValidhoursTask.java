@@ -57,12 +57,14 @@ public class ZlValidhoursTask {
 							zlcodes.add(user.getZlcode());
 						}
 					}
-					List<ZlUser> childList =  zlUserDao.findByZlCodeIn(zlcodes);
-					if(childList != null && childList.size() > 0) {
-						for(ZlUser user : childList) {
-							//修改为砍价失败
-							user.setZlstatus(ZlUser.PTSTATUS_FAIL);
-							zlUserDao.saveAndFlush(user);
+					if(zlcodes != null && zlcodes.size() > 0) {
+						List<ZlUser> childList =  zlUserDao.findByZlCodeIn(zlcodes);
+						if(childList != null && childList.size() > 0) {
+							for(ZlUser user : childList) {
+								//修改为砍价失败
+								user.setZlstatus(ZlUser.PTSTATUS_FAIL);
+								zlUserDao.saveAndFlush(user);
+							}
 						}
 					}
 				}
