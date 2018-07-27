@@ -50,10 +50,10 @@ public class IsEndCheckTask {
 	@Transactional
 	public void find() {
 		try {
+			Date nowTime = new Timestamp(System.currentTimeMillis());
 			List<PtGoods> ptGoodsList = ptGoodsDao.findByIsEnd(0);
 			for (PtGoods ptGoods : ptGoodsList) {
 				Date endTime = ptGoods.getEndTime();
-				Date nowTime = new Timestamp(System.currentTimeMillis());
 				if(nowTime.after(endTime)) {
 					ptGoods.setIsEnd(1);
 					ptGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.util.ResourceUtils;
@@ -76,14 +78,18 @@ public class test {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		 try {
-//			String certPath = cfgFile.getPath();
-			t.getResource();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-         
+//		 try {
+////			String certPath = cfgFile.getPath();
+//			t.getResource();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		Date nowTime = new Timestamp(System.currentTimeMillis());
+//		Date tTime = new Timestamp();
+//		int ptValidhours =1;
+		Date d = new Date(12121212);
+		
 	}
 	
 	 public void getResource() throws IOException{  

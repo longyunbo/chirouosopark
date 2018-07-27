@@ -18,4 +18,7 @@ public interface PtOrderDao extends JpaRepository<PtOrder, String>, JpaSpecifica
 	
 	@Query(value = "select * from pt_order where ptcode in (?1) ", nativeQuery = true)
 	List<PtOrder> findByPtCodeIn(Set<String> ptcodes);
+	
+	@Query(value = "select * from pt_order where ptgoods_id = ?1 and orderstatus = ?2 and is_header = ?3", nativeQuery = true)
+	List<PtOrder> findByGoodsIdAndStatusAndIsHeader(int goodsId,int orderstatus,int isHeader);
 }

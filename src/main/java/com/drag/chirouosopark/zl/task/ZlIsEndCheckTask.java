@@ -36,10 +36,10 @@ public class ZlIsEndCheckTask {
 	@Transactional
 	public void find() {
 		try {
+			Date nowTime = new Timestamp(System.currentTimeMillis());
 			List<ZlGoods> ZlGoodsList = zlGoodsDao.findByIsEnd(0);
 			for (ZlGoods zlGoods : ZlGoodsList) {
 				Date endTime = zlGoods.getEndTime();
-				Date nowTime = new Timestamp(System.currentTimeMillis());
 				if(nowTime.after(endTime)) {
 					zlGoods.setIsEnd(1);
 					zlGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));

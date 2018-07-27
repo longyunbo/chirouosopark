@@ -36,10 +36,10 @@ public class KjIsEndCheckTask {
 	@Transactional
 	public void find() {
 		try {
+			Date nowTime = new Timestamp(System.currentTimeMillis());
 			List<KjGoods> KjGoodsList = kjGoodsDao.findByIsEnd(0);
 			for (KjGoods kjGoods : KjGoodsList) {
 				Date endTime = kjGoods.getEndTime();
-				Date nowTime = new Timestamp(System.currentTimeMillis());
 				if(nowTime.after(endTime)) {
 					kjGoods.setIsEnd(1);
 					kjGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));

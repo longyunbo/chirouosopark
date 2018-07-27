@@ -51,6 +51,10 @@ public class KjGoods implements Serializable {
 	 */
 	private int kjSize;
 	/**
+	 * 有效期(默认24小时)
+	 */
+	private int kjValidhours;
+	/**
 	 * 砍价开始时间
 	 */
 	private Date startTime;

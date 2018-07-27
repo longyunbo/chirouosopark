@@ -16,7 +16,7 @@ public interface ZlUserDao extends JpaRepository<ZlUser, String>, JpaSpecificati
 	@Query(value = "select * from zl_user where zlgoods_id = ?1", nativeQuery = true)
 	List<ZlUser> findByZlGoodsId(int goodsId);
 	
-	@Query(value = "select * from zl_user where zlgoods_id = ?1 and zlstatus = 2", nativeQuery = true)
+	@Query(value = "select * from zl_user where zlgoods_id = ?1 and zlstatus = ?2", nativeQuery = true)
 	List<ZlUser> findByZlGoodsIdAndZlstatus(int goodsId,int zlstatus);
 	
 	@Query(value = "select * from zl_user where zlgoods_id = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)

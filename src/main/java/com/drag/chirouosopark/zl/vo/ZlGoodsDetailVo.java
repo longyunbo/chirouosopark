@@ -33,7 +33,7 @@ public class ZlGoodsDetailVo{
 	/**
 	 * 助力有效期(默认24小时)
 	 */
-//	private int zlValidhours;
+	private int zlValidhours;
 	/**
 	 * 助力开始时间
 	 */

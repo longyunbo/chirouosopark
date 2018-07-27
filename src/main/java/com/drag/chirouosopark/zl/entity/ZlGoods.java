@@ -47,6 +47,10 @@ public class ZlGoods implements Serializable {
 	 */
 	private int zlSize;
 	/**
+	 * 有效期(默认24小时)
+	 */
+	private int zlValidhours;
+	/**
 	 * 助力开始时间
 	 */
 	private Date startTime;

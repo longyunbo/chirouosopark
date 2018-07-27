@@ -16,7 +16,7 @@ public interface KjUserDao extends JpaRepository<KjUser, String>, JpaSpecificati
 	@Query(value = "select * from kj_user where kjgoods_id = ?1", nativeQuery = true)
 	List<KjUser> findByKjGoodsId(int goodsId);
 	
-	@Query(value = "select * from kj_user where kjgoods_id = ?1 and kjstatus = 2", nativeQuery = true)
+	@Query(value = "select * from kj_user where kjgoods_id = ?1 and kjstatus = ?2", nativeQuery = true)
 	List<KjUser> findByKjGoodsIdAndKjstatus(int goodsId,int kjstatus);
 	
 	@Query(value = "select * from kj_user where kjgoods_id = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)

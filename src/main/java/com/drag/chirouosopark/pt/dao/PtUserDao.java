@@ -22,6 +22,9 @@ public interface PtUserDao extends JpaRepository<PtUser, String>, JpaSpecificati
 	@Query(value = "select * from pt_user where ptgoods_id = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<PtUser> findByPtGoodsIdAndIsHead(int goodsId,int isHead);
 	
+	@Query(value = "select * from pt_user where ptgoods_id = ?1 and ptstatus = ?2 and is_header = ?3", nativeQuery = true)
+	List<PtUser> findByGoodsIdAndStatusAndIsHeader(int goodsId,int status,int isHead);
+	
 	@Query(value = "select * from pt_user where uid = ?1 order by create_time desc", nativeQuery = true)
 	List<PtUser> findByUid(int uid);
 	
