@@ -14,6 +14,11 @@ public class PayReturnResultInfo {
 	    private String trade_type;
 	    private String err_code;
 	    private String err_code_des;
+	    private String transaction_id;
+	    private String refund_id;
+	    private int refund_fee;
+	    private int total_fee;
+	    private int cash_fee;
 	    
 	    
 		public String getReturn_code() {
@@ -93,6 +98,36 @@ public class PayReturnResultInfo {
 		}
 		public void setErr_code_des(String err_code_des) {
 			this.err_code_des = err_code_des;
+		}
+		public String getTransaction_id() {
+			return transaction_id;
+		}
+		public void setTransaction_id(String transaction_id) {
+			this.transaction_id = transaction_id;
+		}
+		public String getRefund_id() {
+			return refund_id;
+		}
+		public void setRefund_id(String refund_id) {
+			this.refund_id = refund_id;
+		}
+		public int getRefund_fee() {
+			return refund_fee;
+		}
+		public void setRefund_fee(int refund_fee) {
+			this.refund_fee = refund_fee;
+		}
+		public int getTotal_fee() {
+			return total_fee;
+		}
+		public void setTotal_fee(int total_fee) {
+			this.total_fee = total_fee;
+		}
+		public int getCash_fee() {
+			return cash_fee;
+		}
+		public void setCash_fee(int cash_fee) {
+			this.cash_fee = cash_fee;
 		}
     
 }

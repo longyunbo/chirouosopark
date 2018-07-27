@@ -94,7 +94,7 @@ public class IsEndCheckTask {
 								order.setPtrefundcode(out_refund_no);
 								order.setOrderstatus(PtOrder.ORDERSTATUS_RETURN);
 							}else {
-								order.setPtrefundcode(return_code);
+								order.setPtrefundcode(result_code);
 								order.setOrderstatus(PtOrder.ORDERSTATUS_FAIL);
 							}
 							ptOrderDao.saveAndFlush(order);

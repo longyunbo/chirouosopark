@@ -1,7 +1,10 @@
 package com.drag.ChirouosoPark;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import org.springframework.util.ResourceUtils;
@@ -65,16 +68,29 @@ public class test {
 //		BigDecimal num = new BigDecimal(1);
 //		BigDecimal totalPrice = price.multiply(num).multiply(new BigDecimal(100));
 //	    System.out.println(totalPrice.intValue());
-		try {
-			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
-			System.out.println(cfgFile.getAbsolutePath());
-			System.out.println(cfgFile.getPath());
-		} catch (FileNotFoundException e) {
+//		try {
+//			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
+//			System.out.println(cfgFile.getAbsolutePath());
+//			System.out.println(cfgFile.getPath());
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		 try {
+//			String certPath = cfgFile.getPath();
+			t.getResource();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
          
 	}
+	
+	 public void getResource() throws IOException{  
+		 java.net.URL path = this.getClass().getResource("/apiclient_cert.p12");
+//		 String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+		 System.out.println(path);
+	 }
 	
 	 public List getTemplate(){
 		 	String token = this.getAccessToken();

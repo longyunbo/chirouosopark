@@ -18,7 +18,7 @@ public class WxUtil {
 	
 	private static String requestMethod;
 	private static String appid;
-	private static String secret ;
+	private static String secret;
 	
 	@Value("${weixin.url.requestMethod}")
     public void setRequestMethod(String value) {

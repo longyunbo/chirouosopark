@@ -3,6 +3,7 @@ package com.drag.chirouosopark.pay;
 import java.io.File;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -14,7 +15,9 @@ import com.drag.chirouosopark.pay.common.RandomStringGenerator;
 import com.drag.chirouosopark.pay.common.Signature;
 import com.drag.chirouosopark.pay.model.PayReturnInfo;
 import com.drag.chirouosopark.pay.model.PayReturnResultInfo;
+import com.drag.chirouosopark.utils.XStreamEx;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,13 +28,19 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class PayReturn {
 	private static final Logger L = Logger.getLogger(PayReturn.class);
+	
+	private static String p12path;
+	@Value("${weixin.url.p12path}")
+    public void setSecret(String value) {
+		p12path = value;
+    }
 
 	public static JSONObject wxReturn(String out_trade_no,int price) {
 		JSONObject json = new JSONObject();
 		try {
-			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
-			String certPath = cfgFile.getPath();
-			
+//			File cfgFile = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "apiclient_cert.p12");
+//			String certPath = cfgFile.getPath();
+			String certPath = p12path;
 			//随机生成的退款编号
 			String out_refund_no = RandomStringGenerator.getRandomStringByLength(32);
 			
@@ -51,9 +60,10 @@ public class PayReturn {
 			String result = CertHttpUtil.postData("https://api.mch.weixin.qq.com/secapi/pay/refund", returnInfo, Configure.mch_id, certPath);
 			System.out.println(result);
 			L.info("---------退款返回:" + result);
-			XStream xStream = new XStream();
+			XStreamEx xStream = new XStreamEx(new DomDriver("utf-8"));
+//			XStream xStream = new XStream();
 			xStream.alias("xml", PayReturnResultInfo.class);
-
+//			xStream.ignoreUnknownElements();
 			PayReturnResultInfo payReturnResultInfo = (PayReturnResultInfo) xStream.fromXML(result);
 			JSONObject itemJSONObj = JSONObject.parseObject(JSON.toJSONString(payReturnResultInfo));
 			return itemJSONObj;
