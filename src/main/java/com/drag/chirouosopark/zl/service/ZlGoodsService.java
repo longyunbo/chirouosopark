@@ -106,7 +106,8 @@ public class ZlGoodsService {
 					userVo.setCode(pu.getZlcode());
 					userVo.setStatus(pu.getZlstatus());
 					if(user != null) {
-						BeanUtils.copyProperties(user, userVo);
+						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+						userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 						grouperList.add(userVo);
 					}
 				}
@@ -258,7 +259,8 @@ public class ZlGoodsService {
 							userVo.setCode(pu.getZlcode());
 							userVo.setStatus(pu.getZlstatus());
 							if(user != null) {
-								BeanUtils.copyProperties(user, userVo);
+								BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+								userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 								grouperList.add(userVo);
 							}
 						}
@@ -457,7 +459,7 @@ public class ZlGoodsService {
 							//openid
 							json.put("touser", userMap.get(uid).getOpenid());
 							json.put("template_id", templateid);
-							json.put("page", "pages/help/helpdetail/helpdetail?shopid=" + user.getZlgoodsId() + "isFinish = 1");
+							json.put("page", "pages/help/helpdetail/helpdetail?shopid=" + user.getZlgoodsId() + "&isFinish=1");
 							json.put("form_id", user.getFormId());
 							//商品名称
 							JSONObject keyword1 = new JSONObject();

@@ -90,7 +90,8 @@ public class MsGoodsService {
 					userVo.setPrice(pu.getPrice());
 					userVo.setNumber(pu.getNumber());
 					if(user != null) {
-						BeanUtils.copyProperties(user, userVo);
+						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+						userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 						grouperList.add(userVo);
 					}
 				}

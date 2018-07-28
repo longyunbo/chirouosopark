@@ -109,7 +109,8 @@ public class PtGoodsService {
 					userVo.setStatus(pu.getPtstatus());
 					User user = userDao.findOne(groupId);
 					if(user != null) {
-						BeanUtils.copyProperties(user, userVo);
+						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+						userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 						grouperList.add(userVo);
 					}
 				}
@@ -261,7 +262,8 @@ public class PtGoodsService {
 						userVo.setStatus(pu.getPtstatus());
 						userVo.setCode(pu.getPtcode());
 						if(user != null) {
-							BeanUtils.copyProperties(user, userVo);
+							BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+							userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 							grouperList.add(userVo);
 						}
 					}
@@ -469,7 +471,7 @@ public class PtGoodsService {
 						//openid
 						json.put("touser",userMap.get(uid).getOpenid());
 						json.put("template_id", templateid);
-						json.put("page", "pages/collage/collagedetail/collagedetail?shopid=" + user.getPtgoodsId() + "isFinish = 1");
+						json.put("page", "pages/collage/collagedetail/collagedetail?shopid=" + user.getPtgoodsId() + "&isFinish=1");
 						json.put("form_id", user.getFormId());
 						//商品名称
 						JSONObject keyword1 = new JSONObject();

@@ -111,7 +111,8 @@ public class KjGoodsService {
 					userVo.setCode(pu.getKjcode());
 					userVo.setStatus(pu.getKjstatus());
 					if(user != null) {
-						BeanUtils.copyProperties(user, userVo);
+						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+						userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 						grouperList.add(userVo);
 					}
 				}
@@ -277,7 +278,8 @@ public class KjGoodsService {
 							int uid = pu.getUid();
 							User user = userDao.findOne(uid);
 							if(user != null) {
-								BeanUtils.copyProperties(user, userVo);
+								BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
+								userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 								grouperList.add(userVo);
 							}
 						}
@@ -487,7 +489,7 @@ public class KjGoodsService {
 							//openid
 							json.put("touser", userMap.get(uid).getOpenid());
 							json.put("template_id", templateid);
-							json.put("page", "pages/bargain/bargaindetail/bargaindetail?shopid=" + user.getKjgoodsId() + "isFinish = 1");
+							json.put("page", "pages/bargain/bargaindetail/bargaindetail?shopid=" + user.getKjgoodsId() + "&isFinish=1");
 							json.put("form_id", user.getFormId());
 							//商品名称
 							JSONObject keyword1 = new JSONObject();
