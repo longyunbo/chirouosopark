@@ -87,6 +87,7 @@ public class UserTicketService {
 				BeanUtils.copyProperties(template, ticket);
 				ticket.setUid(uid);
 				ticket.setStatus(UserTicket.STATUS_NO);
+				ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 				userTicketDao.save(ticket);
 				resp.setReturnCode(Constant.SUCCESS);
 				resp.setErrorMessage("卡券发送成功!");

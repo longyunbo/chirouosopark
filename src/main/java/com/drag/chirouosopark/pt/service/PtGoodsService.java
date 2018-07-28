@@ -469,7 +469,7 @@ public class PtGoodsService {
 						//openid
 						json.put("touser",userMap.get(uid).getOpenid());
 						json.put("template_id", templateid);
-						json.put("page", "pages/collage/collagedetail/collagedetail?shopid=" + user.getPtgoodsId());
+						json.put("page", "pages/collage/collagedetail/collagedetail?shopid=" + user.getPtgoodsId() + "isFinish = 1");
 						json.put("form_id", user.getFormId());
 						//商品名称
 						JSONObject keyword1 = new JSONObject();

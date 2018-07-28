@@ -272,10 +272,10 @@ public class DragGoodsService {
 	@Transactional
 	public void addDragUsedRecord(User user,int goodsId,String goodsName,String type, int dragBone) {
 		try {
-			int udragBone = user.getDragBone();
-			int nowDragBone = udragBone - dragBone;
-			user.setDragBone(nowDragBone);
-			userDao.saveAndFlush(user);
+//			int udragBone = user.getDragBone();
+//			int nowDragBone = udragBone;
+//			user.setDragBone(nowDragBone);
+//			userDao.saveAndFlush(user);
 			//会员恐龙骨记录表
 			UserDragUsedRecord dragRecord = new UserDragUsedRecord();
 			dragRecord.setId(dragRecord.getId());
@@ -283,8 +283,8 @@ public class DragGoodsService {
 			dragRecord.setGoodsId(goodsId);
 			dragRecord.setGoodsName(goodsName);
 			dragRecord.setType(type);
-			//当前当前恐龙骨
-			dragRecord.setDragBone(nowDragBone);
+			//当前恐龙骨
+			dragRecord.setDragBone(user.getDragBone());
 			//获得恐龙骨
 			dragRecord.setUsedDragBone(dragBone);
 			dragRecord.setCreateTime(new Timestamp(System.currentTimeMillis()));

@@ -457,7 +457,7 @@ public class ZlGoodsService {
 							//openid
 							json.put("touser", userMap.get(uid).getOpenid());
 							json.put("template_id", templateid);
-							json.put("page", "pages/help/helpdetail/helpdetail?shopid=" + user.getZlgoodsId());
+							json.put("page", "pages/help/helpdetail/helpdetail?shopid=" + user.getZlgoodsId() + "isFinish = 1");
 							json.put("form_id", user.getFormId());
 							//商品名称
 							JSONObject keyword1 = new JSONObject();

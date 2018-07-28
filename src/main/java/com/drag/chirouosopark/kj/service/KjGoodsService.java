@@ -487,7 +487,7 @@ public class KjGoodsService {
 							//openid
 							json.put("touser", userMap.get(uid).getOpenid());
 							json.put("template_id", templateid);
-							json.put("page", "pages/bargain/bargaindetail/bargaindetail?shopid=" + user.getKjgoodsId());
+							json.put("page", "pages/bargain/bargaindetail/bargaindetail?shopid=" + user.getKjgoodsId() + "isFinish = 1");
 							json.put("form_id", user.getFormId());
 							//商品名称
 							JSONObject keyword1 = new JSONObject();
