@@ -44,6 +44,8 @@ public final class Constant {
 	public static final String TICKET_OVER = "9010";
 	//用户权限不够
 	public static final String AUTH_OVER = "9011";
+	//用户砍价次数超限
+	public static final String KJTIME_OVER = "9012";
 	
 	
 }

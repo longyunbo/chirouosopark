@@ -66,6 +66,8 @@ public class KjGoodsService {
 	private UserService userService;
 	@Value("${weixin.url.kj.templateid}")
 	private String templateid;
+	@Value("${kj.goods.onlyOne.auth}")
+	private String onlyOneAuth;
 
 	/**
 	 * 查询所有的砍价商品(砍价列表)
@@ -175,6 +177,17 @@ public class KjGoodsService {
 			
 			//获取系统用户编号
 			int uid = user.getId();
+			
+			//处理只能砍价一次的霸王餐的用户，不能再砍第二次
+			String auth = goods.getAuth();
+			if(auth.equals(onlyOneAuth)) {
+				List<KjUser> vipKjUserList = kjUserDao.findByKjGoodsIdAndUidAndIsHeader(kjgoodsId, uid, KjUser.ISHEADER_YES);
+				if(vipKjUserList != null && vipKjUserList.size() > 0) {
+					baseResp.setReturnCode(Constant.KJTIME_OVER);
+					baseResp.setErrorMessage("该商品只能砍价一次!");
+					return baseResp;
+				}
+			}
 			
 			List<KjUser> kjList = kjUserDao.findByUidAndKjgoodsIdAndIsHeadAndKjStatus(uid, kjgoodsId, KjUser.ISHEADER_YES, KjUser.PTSTATUS_MIDDLE);
 			if(kjList != null && kjList.size() > 0) {
@@ -326,12 +339,12 @@ public class KjGoodsService {
 				return baseResp;
 			}
 			
-			Boolean authFlag =  userService.checkAuth(user, goods.getAuth());
-			if(!authFlag) {
-				baseResp.setReturnCode(Constant.AUTH_OVER);
-				baseResp.setErrorMessage("该用户权限不够!");
-				return baseResp;
-			}
+//			Boolean authFlag =  userService.checkAuth(user, goods.getAuth());
+//			if(!authFlag) {
+//				baseResp.setReturnCode(Constant.AUTH_OVER);
+//				baseResp.setErrorMessage("该用户权限不够!");
+//				return baseResp;
+//			}
 			//同一个用户砍价校验
 			KjUser kjuser = kjUserDao.findByKjGoodsIdAndUidAndKjCode(kjgoodsId, uid, kjCode);
 			if(kjuser != null) {

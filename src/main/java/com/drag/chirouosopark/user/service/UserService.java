@@ -127,7 +127,7 @@ public class UserService {
 		try {
 			User user = userDao.findByOpenid(openid);
 			if(user != null) {
-				BeanUtils.copyProperties(user, userVo);
+				BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
 			}
 		} catch (Exception e) {
 			log.error("检查权限异常,{}",e);

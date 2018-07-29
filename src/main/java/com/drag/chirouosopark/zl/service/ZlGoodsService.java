@@ -249,6 +249,7 @@ public class ZlGoodsService {
 				ZlGoods goods = zlGoodsDao.findGoodsDetail(zlgoodsId);
 				if(goods != null ) {
 					this.copyProperties(goods, detailVo);
+					detailVo.setGroupStartTime(DateUtil.format(grouper.getCreateTime(), "yyyy-MM-dd HH:mm:ss")); 
 					//根据商品编号，助力code，查询好友助力信息
 					groupers = zlUserDao.findByZlGoodsIdAndIsHeadAndZlCode(zlgoodsId,ZlUser.ISHEADER_NO,zlcode);
 					if(groupers != null && groupers.size() > 0) {

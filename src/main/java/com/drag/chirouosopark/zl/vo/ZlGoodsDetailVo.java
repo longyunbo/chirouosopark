@@ -98,6 +98,10 @@ public class ZlGoodsDetailVo{
 	 * 活动权限
 	 */
 	private String auth;
+	/**
+	 * 团长开始时间
+	 */
+	private String groupStartTime;
 	
 	/**
 	 * 团长
