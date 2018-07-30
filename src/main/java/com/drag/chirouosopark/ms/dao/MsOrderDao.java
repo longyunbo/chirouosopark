@@ -12,9 +12,8 @@ import com.drag.chirouosopark.ms.entity.MsOrder;
 public interface MsOrderDao extends JpaRepository<MsOrder, String>, JpaSpecificationExecutor<MsOrder> {
 	
 	
-	@Query(value = "select * from ms_order where mscode = ?1 and is_header = ?2", nativeQuery = true)
-	MsOrder findByMsCodeAndIsHeader(String mscode,int is_header);
-	
+	@Query(value = "select * from ms_order where uid = ?1", nativeQuery = true)
+	List<MsOrder> findByUid(int uid);
 	
 	@Query(value = "select * from ms_order where msgoods_id = ?1 order by create_time desc", nativeQuery = true)
 	List<MsOrder> findByMsgoodsId(int msgoodsId);

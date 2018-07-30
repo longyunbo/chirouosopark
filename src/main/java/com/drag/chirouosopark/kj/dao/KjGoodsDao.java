@@ -1,6 +1,7 @@
 package com.drag.chirouosopark.kj.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,5 +17,8 @@ public interface KjGoodsDao extends JpaRepository<KjGoods, String>, JpaSpecifica
 	@Query(value = "select * from kj_goods where kjgoods_id = ?1", nativeQuery = true)
 	KjGoods findGoodsDetail(int goodsId);
 	
+	
+	@Query(value = "select * from kj_goods where kjgoods_id in (?1)", nativeQuery = true)
+	List<KjGoods> findByIdIn(Set<Integer> kjIds);
 	
 }
