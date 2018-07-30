@@ -102,12 +102,24 @@ public class PtGoodsService {
 			//根据商品编号查询拼团团长
 			groupers = ptUserDao.findByPtGoodsIdAndIsHead(goodsId, PtUser.ISHEADER_YES);
 			if(groupers != null && groupers.size() > 0) {
+				Map<Integer,User> userMap = new HashMap<Integer,User>();
+				Set<Integer> ids = new HashSet<Integer>();
+				for(PtUser pu : groupers) {
+					ids.add(pu.getGrouperId());
+				}
+				//把用户存在缓存中，不用去循环查询
+				if(ids != null && ids.size() > 0) {
+					List<User> userList = userDao.findByIdIn(ids);
+					for(User us : userList) {
+						userMap.put(us.getId(), us);
+					}
+				}
 				for(PtUser pu : groupers) {
 					UserVo userVo = new UserVo();
 					int groupId = pu.getGrouperId();
 					userVo.setCode(pu.getPtcode());
 					userVo.setStatus(pu.getPtstatus());
-					User user = userDao.findOne(groupId);
+					User user = userMap.get(groupId);
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
 						userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
@@ -255,10 +267,22 @@ public class PtGoodsService {
 				this.copyProperties(goods, detailVo);
 				groupers = ptUserDao.findByPtCode(ptcode);
 				if(groupers != null && groupers.size() > 0) {
+					Map<Integer,User> userMap = new HashMap<Integer,User>();
+					Set<Integer> ids = new HashSet<Integer>();
+					for(PtUser pu : groupers) {
+						ids.add(pu.getGrouperId());
+					}
+					//把用户存在缓存中，不用去循环查询
+					if(ids != null && ids.size() > 0) {
+						List<User> userList = userDao.findByIdIn(ids);
+						for(User us : userList) {
+							userMap.put(us.getId(), us);
+						}
+					}
 					for(PtUser pu : groupers) {
 						UserVo userVo = new UserVo();
 						int uid = pu.getUid();
-						User user = userDao.findOne(uid);
+						User user = userMap.get(uid);
 						userVo.setStatus(pu.getPtstatus());
 						userVo.setCode(pu.getPtcode());
 						if(user != null) {

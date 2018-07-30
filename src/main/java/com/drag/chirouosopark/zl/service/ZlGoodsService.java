@@ -99,10 +99,22 @@ public class ZlGoodsService {
 			//根据商品编号查询助力团长
 			groupers = zlUserDao.findByZlGoodsIdAndIsHead(goodsId, ZlUser.ISHEADER_YES);
 			if(groupers != null && groupers.size() > 0) {
+				Map<Integer,User> userMap = new HashMap<Integer,User>();
+				Set<Integer> ids = new HashSet<Integer>();
+				for(ZlUser pu : groupers) {
+					ids.add(pu.getGrouperId());
+				}
+				//把用户存在缓存中，不用去循环查询
+				if(ids != null && ids.size() > 0) {
+					List<User> userList = userDao.findByIdIn(ids);
+					for(User us : userList) {
+						userMap.put(us.getId(), us);
+					}
+				}
 				for(ZlUser pu : groupers) {
 					UserVo userVo = new UserVo();
 					int groupId = pu.getGrouperId();
-					User user = userDao.findOne(groupId);
+					User user = userMap.get(groupId);
 					userVo.setCode(pu.getZlcode());
 					userVo.setStatus(pu.getZlstatus());
 					if(user != null) {
@@ -253,10 +265,22 @@ public class ZlGoodsService {
 					//根据商品编号，助力code，查询好友助力信息
 					groupers = zlUserDao.findByZlGoodsIdAndIsHeadAndZlCode(zlgoodsId,ZlUser.ISHEADER_NO,zlcode);
 					if(groupers != null && groupers.size() > 0) {
+						Map<Integer,User> userMap = new HashMap<Integer,User>();
+						Set<Integer> ids = new HashSet<Integer>();
+						for(ZlUser pu : groupers) {
+							ids.add(pu.getGrouperId());
+						}
+						//把用户存在缓存中，不用去循环查询
+						if(ids != null && ids.size() > 0) {
+							List<User> userList = userDao.findByIdIn(ids);
+							for(User us : userList) {
+								userMap.put(us.getId(), us);
+							}
+						}
 						for(ZlUser pu : groupers) {
 							UserVo userVo = new UserVo();
 							int uid = pu.getUid();
-							User user = userDao.findOne(uid);
+							User user = userMap.get(uid);
 							userVo.setCode(pu.getZlcode());
 							userVo.setStatus(pu.getZlstatus());
 							if(user != null) {

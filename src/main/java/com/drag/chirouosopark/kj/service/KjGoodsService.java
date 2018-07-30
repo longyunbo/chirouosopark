@@ -105,10 +105,22 @@ public class KjGoodsService {
 			//根据商品编号查询砍价团长
 			groupers = kjUserDao.findByKjGoodsIdAndIsHead(goodsId, KjUser.ISHEADER_YES);
 			if(groupers != null && groupers.size() > 0) {
+				Map<Integer,User> userMap = new HashMap<Integer,User>();
+				Set<Integer> ids = new HashSet<Integer>();
+				for(KjUser pu : groupers) {
+					ids.add(pu.getGrouperId());
+				}
+				//把用户存在缓存中，不用去循环查询
+				if(ids != null && ids.size() > 0) {
+					List<User> userList = userDao.findByIdIn(ids);
+					for(User us : userList) {
+						userMap.put(us.getId(), us);
+					}
+				}
 				for(KjUser pu : groupers) {
 					UserVo userVo = new UserVo();
 					int groupId = pu.getGrouperId();
-					User user = userDao.findOne(groupId);
+					User user = userMap.get(groupId);
 					userVo.setPrice(pu.getPrice());
 					userVo.setCode(pu.getKjcode());
 					userVo.setStatus(pu.getKjstatus());
@@ -283,13 +295,25 @@ public class KjGoodsService {
 					//根据商品编号，砍价code，查询好友砍价信息
 					groupers = kjUserDao.findByKjCode(kjcode);
 					if(groupers != null && groupers.size() > 0) {
+						Map<Integer,User> userMap = new HashMap<Integer,User>();
+						Set<Integer> ids = new HashSet<Integer>();
+						for(KjUser pu : groupers) {
+							ids.add(pu.getGrouperId());
+						}
+						//把用户存在缓存中，不用去循环查询
+						if(ids != null && ids.size() > 0) {
+							List<User> userList = userDao.findByIdIn(ids);
+							for(User us : userList) {
+								userMap.put(us.getId(), us);
+							}
+						}
 						for(KjUser pu : groupers) {
 							UserVo userVo = new UserVo();
 							userVo.setPrice(pu.getPrice());
 							userVo.setCode(pu.getKjcode());
 							userVo.setStatus(pu.getKjstatus());
 							int uid = pu.getUid();
-							User user = userDao.findOne(uid);
+							User user = userMap.get(uid);
 							if(user != null) {
 								BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
 								userVo.setCreateTime(DateUtil.format(pu.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));

@@ -2,7 +2,11 @@ package com.drag.chirouosopark.ms.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.drag.chirouosopark.common.Constant;
 import com.drag.chirouosopark.common.exception.AMPException;
+import com.drag.chirouosopark.kj.entity.KjUser;
 import com.drag.chirouosopark.ms.dao.MsGoodsDao;
 import com.drag.chirouosopark.ms.dao.MsOrderDao;
 import com.drag.chirouosopark.ms.entity.MsGoods;
@@ -83,10 +88,23 @@ public class MsGoodsService {
 			this.copyProperties(goods, detailVo);
 			List<MsOrder> msList = msOrderDao.findByMsgoodsId(goodsId);
 			if(msList != null && msList.size() > 0) {
+				
+				Map<Integer,User> userMap = new HashMap<Integer,User>();
+				Set<Integer> ids = new HashSet<Integer>();
+				for(MsOrder pu : msList) {
+					ids.add(pu.getUid());
+				}
+				//把用户存在缓存中，不用去循环查询
+				if(ids != null && ids.size() > 0) {
+					List<User> userList = userDao.findByIdIn(ids);
+					for(User us : userList) {
+						userMap.put(us.getId(), us);
+					}
+				}
 				for(MsOrder pu : msList) {
 					UserVo userVo = new UserVo();
 					int uid = pu.getUid();
-					User user = userDao.findOne(uid);
+					User user = userMap.get(uid);
 					userVo.setPrice(pu.getPrice());
 					userVo.setNumber(pu.getNumber());
 					if(user != null) {
