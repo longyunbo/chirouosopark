@@ -149,9 +149,22 @@ public class UserService {
 		User user = userDao.findByOpenid(openid);
 		int uid = user.getId();
 		List<PtUser> ptList = ptUserDao.findByUid(uid);
-		//把编号存在缓存中，不用循环查询
+		List<KjUser> kjList = kjUserDao.findByUid(uid);
+		List<ZlUser> zlList = zlUserDao.findByUid(uid);
+		List<MsOrder> msList = msOrderDao.findByUid(uid);
+		
+		Map<Integer,String> userMap = new HashMap<Integer,String>();
 		Set<Integer> ids = new HashSet<Integer>();
+		
+		Map<Integer,PtGoods> ptGoodsMap = new HashMap<Integer,PtGoods>();
+		Map<Integer, KjGoods> kjGoodsMap = new HashMap<Integer, KjGoods>();
+		Map<Integer, ZlGoods> zlGoodsMap = new HashMap<Integer, ZlGoods>();
+		Map<Integer, MsGoods> msGoodsMap = new HashMap<Integer, MsGoods>();
 		Set<Integer> ptGoodsIds = new HashSet<Integer>();
+		Set<Integer> kjGoodsIds = new HashSet<Integer>();
+		Set<Integer> zlGoodsIds = new HashSet<Integer>();
+		Set<Integer> msGoodsIds = new HashSet<Integer>();
+		
 		if(ptList != null && ptList.size() > 0) {
 			for(PtUser us : ptList) {
 				ids.add(us.getUid());
@@ -159,22 +172,59 @@ public class UserService {
 				ptGoodsIds.add(us.getPtgoodsId());
 			}
 		}
+		if(zlList != null && zlList.size() >0) {
+			for(ZlUser us : zlList) {
+				ids.add(us.getUid());
+				ids.add(us.getGrouperId());
+				zlGoodsIds.add(us.getZlgoodsId());
+			}
+		}
+		if(kjList != null && kjList.size() > 0) {
+			for(KjUser us : kjList) {
+				ids.add(us.getUid());
+				ids.add(us.getGrouperId());
+				kjGoodsIds.add(us.getKjgoodsId());
+			}
+		}
+		if(msList != null && msList.size() > 0) {
+			for(MsOrder ms : msList) {
+				ids.add(ms.getUid());
+				msGoodsIds.add(ms.getMsgoodsId());
+			}
+		}
 		//把用户存在缓存中，不用去循环查询
-		Map<Integer,String> userMap = new HashMap<Integer,String>();
 		if(ids != null && ids.size() > 0) {
 			List<User> userList = userDao.findByIdIn(ids);
 			for(User us : userList) {
 				userMap.put(us.getId(), us.getOpenid());
 			}
 		}
-		//把用户参与的活动存在Map缓存中
-		Map<Integer,PtGoods> ptGoodsMap = new HashMap<Integer,PtGoods>();
+		//把查询的商品存在map中，也不用循环查询
 		if(ptGoodsIds != null && ptGoodsIds.size() > 0) {
 			List<PtGoods> ptGoodsList = ptGoodsDao.findByIdIn(ptGoodsIds);
 			for(PtGoods pt : ptGoodsList) {
 				ptGoodsMap.put(pt.getPtgoodsId(), pt);
 			}
 		}
+		if (kjGoodsIds != null && kjGoodsIds.size() > 0) {
+			List<KjGoods> kjGoodsList = kjGoodsDao.findByIdIn(kjGoodsIds);
+			for (KjGoods kj : kjGoodsList) {
+				kjGoodsMap.put(kj.getKjgoodsId(), kj);
+			}
+		}
+		if (zlGoodsIds != null && zlGoodsIds.size() > 0) {
+			List<ZlGoods> zlGoodsList = zlGoodsDao.findByIdIn(zlGoodsIds);
+			for (ZlGoods zl : zlGoodsList) {
+				zlGoodsMap.put(zl.getZlgoodsId(), zl);
+			}
+		}
+		if (msGoodsIds != null && msGoodsIds.size() > 0) {
+			List<MsGoods> msGoodsList = msGoodsDao.findByIdIn(msGoodsIds);
+			for (MsGoods ms : msGoodsList) {
+				msGoodsMap.put(ms.getMsgoodsId(), ms);
+			}
+		}
+		
 		if(ptList != null && ptList.size() > 0) {
 			for(PtUser pt : ptList) {
 				int goodsId = pt.getPtgoodsId();
@@ -206,35 +256,9 @@ public class UserService {
 			}
 		}
 		
-		List<KjUser> kjList = kjUserDao.findByUid(uid);
-		Set<Integer> kjIds = new HashSet<Integer>();
-		Set<Integer> kjGoodsIds = new HashSet<Integer>();
-		if(kjList != null && kjList.size() > 0) {
-			for(KjUser us : kjList) {
-				kjIds.add(us.getUid());
-				kjIds.add(us.getGrouperId());
-				kjGoodsIds.add(us.getKjgoodsId());
-			}
-		}
-		Map<Integer,String> kjUserMap = new HashMap<Integer,String>();
-		if(kjIds != null && kjIds.size() > 0) {
-			List<User> userList = userDao.findByIdIn(kjIds);
-			for(User us : userList) {
-				kjUserMap.put(us.getId(), us.getOpenid());
-			}
-		}
-		// 把用户参与的活动存在Map缓存中
-		Map<Integer, KjGoods> kjGoodsMap = new HashMap<Integer, KjGoods>();
-		if (kjGoodsIds != null && kjGoodsIds.size() > 0) {
-			List<KjGoods> kjGoodsList = kjGoodsDao.findByIdIn(kjGoodsIds);
-			for (KjGoods kj : kjGoodsList) {
-				kjGoodsMap.put(kj.getKjgoodsId(), kj);
-			}
-		}
 		if(kjList != null && kjList.size() > 0) {
 			for(KjUser kj : kjList) {
 				int goodsId = kj.getKjgoodsId();
-//				KjGoods goods = kjGoodsDao.findGoodsDetail(goodsId);
 				KjGoods goods = kjGoodsMap.get(goodsId);
 				ActivityVo vo = new ActivityVo(); 
 				vo.setGoodsId(goodsId);
@@ -257,43 +281,15 @@ public class UserService {
 				vo.setTimes(goods.getKjTimes());
 				vo.setSuccTimes(goods.getKjSuccTimes());
 				vo.setCode(kj.getKjcode());
-				vo.setUid(kjUserMap.get(kj.getUid()));
-				vo.setGrouperId(kjUserMap.get(kj.getGrouperId()));
+				vo.setUid(userMap.get(kj.getUid()));
+				vo.setGrouperId(userMap.get(kj.getGrouperId()));
 				actList.add(vo);
-			}
-		}
-		List<ZlUser> zlList = zlUserDao.findByUid(uid);
-		
-		Set<Integer> zlIds = new HashSet<Integer>();
-		Set<Integer> zlGoodsIds = new HashSet<Integer>();
-		if(zlList != null && zlList.size() >0) {
-			for(ZlUser us : zlList) {
-				zlIds.add(us.getUid());
-				zlIds.add(us.getGrouperId());
-				zlGoodsIds.add(us.getZlgoodsId());
-			}
-		}
-		Map<Integer,String> zlUserMap = new HashMap<Integer,String>();
-		if(zlIds != null && zlIds.size() > 0) {
-			List<User> userList = userDao.findByIdIn(zlIds);
-			for(User us : userList) {
-				zlUserMap.put(us.getId(), us.getOpenid());
-			}
-		}
-		
-		// 把用户参与的活动存在Map缓存中
-		Map<Integer, ZlGoods> zlGoodsMap = new HashMap<Integer, ZlGoods>();
-		if (zlGoodsIds != null && zlGoodsIds.size() > 0) {
-			List<ZlGoods> zlGoodsList = zlGoodsDao.findByIdIn(zlGoodsIds);
-			for (ZlGoods zl : zlGoodsList) {
-				zlGoodsMap.put(zl.getZlgoodsId(), zl);
 			}
 		}
 		
 		if(zlList != null && zlList.size() >0) {
 			for(ZlUser zl : zlList) {
 				int goodsId = zl.getZlgoodsId();
-//				ZlGoods goods = zlGoodsDao.findGoodsDetail(goodsId);
 				ZlGoods goods = zlGoodsMap.get(goodsId);
 				ActivityVo vo = new ActivityVo(); 
 				vo.setGoodsId(goodsId);
@@ -316,42 +312,15 @@ public class UserService {
 				vo.setTimes(goods.getZlTimes());
 				vo.setSuccTimes(goods.getZlSuccTimes());
 				vo.setCode(zl.getZlcode());
-				vo.setUid(zlUserMap.get(zl.getUid()));
-				vo.setGrouperId(zlUserMap.get(zl.getGrouperId()));
+				vo.setUid(userMap.get(zl.getUid()));
+				vo.setGrouperId(userMap.get(zl.getGrouperId()));
 				actList.add(vo);
-			}
-		}
-		
-		List<MsOrder> msList = msOrderDao.findByUid(uid);
-		Set<Integer> msIds = new HashSet<Integer>();
-		Set<Integer> msGoodsIds = new HashSet<Integer>();
-		if(msList != null && msList.size() > 0) {
-			for(MsOrder ms : msList) {
-				msIds.add(ms.getUid());
-				msGoodsIds.add(ms.getMsgoodsId());
-			}
-		}
-		
-		Map<Integer,String> msUserMap = new HashMap<Integer,String>();
-		if(msIds != null && msIds.size() > 0) {
-			List<User> userList = userDao.findByIdIn(msIds);
-			for(User us : userList) {
-				msUserMap.put(us.getId(), us.getOpenid());
-			}
-		}
-		
-		Map<Integer, MsGoods> msGoodsMap = new HashMap<Integer, MsGoods>();
-		if (msGoodsIds != null && msGoodsIds.size() > 0) {
-			List<MsGoods> msGoodsList = msGoodsDao.findByIdIn(msGoodsIds);
-			for (MsGoods ms : msGoodsList) {
-				msGoodsMap.put(ms.getMsgoodsId(), ms);
 			}
 		}
 		
 		if(msList != null && msList.size() > 0) {
 			for(MsOrder ms : msList) {
 				int goodsId = ms.getMsgoodsId();
-//				MsGoods goods = msGoodsDao.findGoodsDetail(goodsId);
 				MsGoods goods = msGoodsMap.get(goodsId);
 				ActivityVo vo = new ActivityVo();
 				vo.setGoodsId(ms.getMsgoodsId());
@@ -372,8 +341,8 @@ public class UserService {
 				vo.setCreateTime(DateUtil.format(goods.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
 				vo.setIsEnd(goods.getIsEnd());
 				vo.setSuccTimes(goods.getMsSuccTimes());
-				vo.setUid(msUserMap.get(ms.getUid()));
-				vo.setGrouperId(msUserMap.get(ms.getUid()));
+				vo.setUid(userMap.get(ms.getUid()));
+				vo.setGrouperId(userMap.get(ms.getUid()));
 				actList.add(vo);
 			}
 		}
