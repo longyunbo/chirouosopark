@@ -270,7 +270,7 @@ public class PtGoodsService {
 					Map<Integer,User> userMap = new HashMap<Integer,User>();
 					Set<Integer> ids = new HashSet<Integer>();
 					for(PtUser pu : groupers) {
-						ids.add(pu.getGrouperId());
+						ids.add(pu.getUid());
 					}
 					//把用户存在缓存中，不用去循环查询
 					if(ids != null && ids.size() > 0) {
