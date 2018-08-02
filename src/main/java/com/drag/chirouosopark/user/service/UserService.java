@@ -3,6 +3,7 @@ package com.drag.chirouosopark.user.service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -164,12 +165,19 @@ public class UserService {
 		Set<Integer> kjGoodsIds = new HashSet<Integer>();
 		Set<Integer> zlGoodsIds = new HashSet<Integer>();
 		Set<Integer> msGoodsIds = new HashSet<Integer>();
+		Set<String> ptCodes = new HashSet<String>();
+		Set<String> kjCodes = new HashSet<String>();
+		Set<String> zlCodes = new HashSet<String>();
+		Map<String, Date> ptGroupTimeMap = new HashMap<String, Date>();
+		Map<String, Date> zlGroupTimeMap = new HashMap<String, Date>();
+		Map<String, Date> kjGroupTimeMap = new HashMap<String, Date>();
 		
 		if(ptList != null && ptList.size() > 0) {
 			for(PtUser us : ptList) {
 				ids.add(us.getUid());
 				ids.add(us.getGrouperId());
 				ptGoodsIds.add(us.getPtgoodsId());
+				ptCodes.add(us.getPtcode());
 			}
 		}
 		if(zlList != null && zlList.size() >0) {
@@ -177,6 +185,7 @@ public class UserService {
 				ids.add(us.getUid());
 				ids.add(us.getGrouperId());
 				zlGoodsIds.add(us.getZlgoodsId());
+				zlCodes.add(us.getZlcode());
 			}
 		}
 		if(kjList != null && kjList.size() > 0) {
@@ -184,6 +193,7 @@ public class UserService {
 				ids.add(us.getUid());
 				ids.add(us.getGrouperId());
 				kjGoodsIds.add(us.getKjgoodsId());
+				kjCodes.add(us.getKjcode());
 			}
 		}
 		if(msList != null && msList.size() > 0) {
@@ -225,6 +235,27 @@ public class UserService {
 			}
 		}
 		
+		//查询团长的有效时间
+		if (ptCodes != null && ptCodes.size() > 0) {
+			List<PtUser> users  = ptUserDao.findByPtCodeInAndHead(ptCodes);
+			for (PtUser us : users) {
+				ptGroupTimeMap.put(us.getPtcode(), us.getCreateTime());
+			}
+		}
+		if (zlCodes != null && zlCodes.size() > 0) {
+			List<ZlUser> users  = zlUserDao.findByZlCodeInAndHead(zlCodes);
+			for (ZlUser us : users) {
+				zlGroupTimeMap.put(us.getZlcode(), us.getCreateTime());
+			}
+		}
+		if (kjCodes != null && kjCodes.size() > 0) {
+			List<KjUser> users  = kjUserDao.findByKjCodeInAndHead(kjCodes);
+			for (KjUser us : users) {
+				kjGroupTimeMap.put(us.getKjcode(), us.getCreateTime());
+			}
+		}
+		
+		
 		if(ptList != null && ptList.size() > 0) {
 			for(PtUser pt : ptList) {
 				int goodsId = pt.getPtgoodsId();
@@ -249,9 +280,11 @@ public class UserService {
 				vo.setIsEnd(goods.getIsEnd());
 				vo.setTimes(goods.getPtTimes());
 				vo.setSuccTimes(goods.getPtSuccTimes());
+				vo.setValidhours(goods.getPtValidhours());
 				vo.setCode(pt.getPtcode());
 				vo.setUid(userMap.get(pt.getUid()));
 				vo.setGrouperId(userMap.get(pt.getGrouperId()));
+				vo.setGrouperCreateTime(DateUtil.format(ptGroupTimeMap.get(pt.getPtcode()), "yyyy-MM-dd HH:mm:ss"));
 				actList.add(vo);
 			}
 		}
@@ -280,9 +313,11 @@ public class UserService {
 				vo.setIsEnd(goods.getIsEnd());
 				vo.setTimes(goods.getKjTimes());
 				vo.setSuccTimes(goods.getKjSuccTimes());
+				vo.setValidhours(goods.getKjValidhours());
 				vo.setCode(kj.getKjcode());
 				vo.setUid(userMap.get(kj.getUid()));
 				vo.setGrouperId(userMap.get(kj.getGrouperId()));
+				vo.setGrouperCreateTime(DateUtil.format(kjGroupTimeMap.get(kj.getKjcode()), "yyyy-MM-dd HH:mm:ss"));
 				actList.add(vo);
 			}
 		}
@@ -311,9 +346,11 @@ public class UserService {
 				vo.setIsEnd(goods.getIsEnd());
 				vo.setTimes(goods.getZlTimes());
 				vo.setSuccTimes(goods.getZlSuccTimes());
+				vo.setValidhours(goods.getZlValidhours());
 				vo.setCode(zl.getZlcode());
 				vo.setUid(userMap.get(zl.getUid()));
 				vo.setGrouperId(userMap.get(zl.getGrouperId()));
+				vo.setGrouperCreateTime(DateUtil.format(zlGroupTimeMap.get(zl.getZlcode()), "yyyy-MM-dd HH:mm:ss"));
 				actList.add(vo);
 			}
 		}

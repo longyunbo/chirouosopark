@@ -38,6 +38,9 @@ public interface ZlUserDao extends JpaRepository<ZlUser, String>, JpaSpecificati
 	@Query(value = "select * from zl_user where zlcode in (?1) order by create_time desc", nativeQuery = true)
 	List<ZlUser> findByZlCodeIn(Set<String> zlcodes);
 	
+	@Query(value = "select * from zl_user where zlcode in (?1) and is_header = 1 order by create_time desc", nativeQuery = true)
+	List<ZlUser> findByZlCodeInAndHead(Set<String> zlcodes);
+	
 	@Query(value = "select * from zl_user where zlcode = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<ZlUser> findByZlCodeAndIsHead(String zlCode,int isHead);
 	

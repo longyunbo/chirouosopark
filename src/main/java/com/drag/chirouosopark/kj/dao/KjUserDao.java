@@ -41,6 +41,9 @@ public interface KjUserDao extends JpaRepository<KjUser, String>, JpaSpecificati
 	@Query(value = "select * from kj_user where kjcode in (?1) order by create_time desc", nativeQuery = true)
 	List<KjUser> findByKjCodeIn(Set<String> kjCodes);
 	
+	@Query(value = "select * from kj_user where kjcode in (?1) and is_header = 1 order by create_time desc", nativeQuery = true)
+	List<KjUser> findByKjCodeInAndHead(Set<String> kjCodes);
+	
 	@Query(value = "select * from kj_user where kjcode = ?1 and is_header = ?2 order by create_time desc", nativeQuery = true)
 	List<KjUser> findByKjCodeAndIsHead(String kjCode,int isHead);
 	

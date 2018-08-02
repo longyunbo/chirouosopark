@@ -105,5 +105,7 @@ public class ActivityVo{
 	private String uid;
 	
 	private String grouperId;
+	
+	private String grouperCreateTime;
 }
 
