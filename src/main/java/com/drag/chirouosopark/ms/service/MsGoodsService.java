@@ -81,6 +81,7 @@ public class MsGoodsService {
 	 * @return
 	 */
 	public MsGoodsDetailVo goodsDetail(int goodsId) {
+		log.info("【查询秒杀详情商品】传入参数:{}",goodsId);
 		List<UserVo> grouperList = new ArrayList<UserVo>();
 		MsGoodsDetailVo detailVo = new MsGoodsDetailVo();
 		MsGoods goods = msGoodsDao.findGoodsDetail(goodsId);
@@ -156,6 +157,7 @@ public class MsGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【本人发起秒杀,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			//获取系统用户编号
@@ -169,12 +171,13 @@ public class MsGoodsService {
 				if(!flag) {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
-					log.error("该商品库存不足,msgoodsId:{}",msgoodsId);
+					log.error("【该商品库存不足】,msgoodsId:{}",msgoodsId);
 					return baseResp;
 				}
 			}else {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【本人发起秒杀,商品编号不存在】msgoodsId:{}",msgoodsId);
 				return baseResp;
 			}
 			

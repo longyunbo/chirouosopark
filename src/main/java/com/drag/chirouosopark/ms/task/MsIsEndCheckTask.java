@@ -37,7 +37,7 @@ public class MsIsEndCheckTask {
 						msGoods.setIsEnd(1);
 						msGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 						msGoodsDao.saveAndFlush(msGoods);
-						log.info("定时任务处理成功，更新数据{}", msGoods);
+						log.info("【秒杀定时任务处理成功】，更新数据{}", msGoods);
 					}
 				}
 			}

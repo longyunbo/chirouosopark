@@ -45,7 +45,7 @@ public class KjIsEndCheckTask {
 						kjGoods.setIsEnd(1);
 						kjGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 						kjGoodsDao.saveAndFlush(kjGoods);
-						log.info("定时任务处理成功，更新数据{}", kjGoods);
+						
 						
 						int goodsId = kjGoods.getKjgoodsId();
 						//查询砍价中的人数
@@ -64,6 +64,7 @@ public class KjIsEndCheckTask {
 							kjGoods.setKjgoodsNumber(kjgoodsNumber + number);
 							kjGoodsDao.saveAndFlush(kjGoods);
 						}
+						log.info("【砍价定时任务处理成功】，更新数据{}", kjGoods);
 					}
 				}
 			}

@@ -166,12 +166,14 @@ public class PtGoodsService {
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【本人发起拼团,商品编号不存在】ptgoodsId:{}",ptgoodsId);
 				return baseResp;
 			}
 			User user = userDao.findByOpenid(openid);
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【本人发起拼团,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			
@@ -179,6 +181,7 @@ public class PtGoodsService {
 			if(!authFlag) {
 				baseResp.setReturnCode(Constant.AUTH_OVER);
 				baseResp.setErrorMessage("该用户权限不够!");
+				log.error("【本人发起拼团,用户权限不够】user:{}",user);
 				return baseResp;
 			}
 			//获取系统用户编号
@@ -187,6 +190,7 @@ public class PtGoodsService {
 			if(ptList != null && ptList.size() > 0) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经拼过此团，请完成后再拼团!");
+				log.error("【本人发起拼团,该用户已经买此商品，请完成活动后再发起!】ptgoodsId:{},uid:{}",ptgoodsId,uid);
 				return baseResp;
 			}
 			
@@ -199,6 +203,7 @@ public class PtGoodsService {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
 					log.error("该商品库存不足,ptgoodsId:{}",ptgoodsId);
+					log.error("【该商品库存不足】ptgoodsId:{}",ptgoodsId);
 					return baseResp;
 				}
 			}
@@ -321,6 +326,7 @@ public class PtGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【好友发起拼团,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			//获取系统用户编号
@@ -330,6 +336,7 @@ public class PtGoodsService {
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【好友发起拼团,商品编号不存在】ptgoodsId:{}",ptgoodsId);
 				return baseResp;
 			}
 			
@@ -337,6 +344,7 @@ public class PtGoodsService {
 			if(!authFlag) {
 				baseResp.setReturnCode(Constant.AUTH_OVER);
 				baseResp.setErrorMessage("该用户权限不够!");
+				log.error("【好友发起拼团,用户权限不够】user:{}",user);
 				return baseResp;
 			}
 			
@@ -345,6 +353,7 @@ public class PtGoodsService {
 			if(ptuser != null) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经拼过此团，不能再拼团!");
+				log.error("【好友发起拼团,该用户已经拼过此团，不能再拼团!】ptCode:{},ptgoodsId:{},uid:{}",ptCode,ptgoodsId,uid);
 				return baseResp;
 			}
 			
@@ -365,11 +374,13 @@ public class PtGoodsService {
 				if(grouperSize >= ptSize) {
 					baseResp.setReturnCode(Constant.ACTIVITYALREADYDOWN_FAIL);
 					baseResp.setErrorMessage("该团拼团已完成，不能再拼团!");
+					log.error("【好友发起拼团,该团已完成，不能再拼团】ptCode:{}",ptCode);
 					return baseResp;
 				}
 			}else {
 				baseResp.setReturnCode(Constant.ACTIVITYNOTEXISTS);
 				baseResp.setErrorMessage("该拼团编号不存在!");
+				log.error("【好友发起拼团,该拼团编号不存在】ptCode:{}",ptCode);
 				return baseResp;
 			}
 			
@@ -382,7 +393,7 @@ public class PtGoodsService {
 				if(!flag) {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
-					log.error("该商品库存不足,ptgoodsId:{}",ptgoodsId);
+					log.error("【好友发起拼团,该商品库存不足】,ptgoodsId:{}",ptgoodsId);
 					return baseResp;
 				}
 			}

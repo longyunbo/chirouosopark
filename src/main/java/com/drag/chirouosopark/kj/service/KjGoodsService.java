@@ -96,6 +96,7 @@ public class KjGoodsService {
 	 * @return
 	 */
 	public KjGoodsDetailVo goodsDetail(int goodsId) {
+		log.info("【砍价查询砍价详情商品】传入参数:{}",goodsId);
 		List<UserVo> grouperList = new ArrayList<UserVo>();
 		KjGoodsDetailVo detailVo = new KjGoodsDetailVo();
 		List<KjUser> groupers = new ArrayList<KjUser>();
@@ -172,11 +173,13 @@ public class KjGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【本人发起砍价,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【本人发起砍价,商品编号不存在】kjgoodsId:{}",kjgoodsId);
 				return baseResp;
 			}
 			
@@ -184,6 +187,7 @@ public class KjGoodsService {
 			if(!authFlag) {
 				baseResp.setReturnCode(Constant.AUTH_OVER);
 				baseResp.setErrorMessage("该用户权限不够!");
+				log.error("【本人发起砍价,用户权限不够】user:{}",user);
 				return baseResp;
 			}
 			
@@ -197,6 +201,7 @@ public class KjGoodsService {
 				if(vipKjUserList != null && vipKjUserList.size() > 0) {
 					baseResp.setReturnCode(Constant.KJTIME_OVER);
 					baseResp.setErrorMessage("该商品只能砍价一次!");
+					log.error("【本人发起砍价,该商品只能砍价一次】kjgoodsId:{},uid:{}",kjgoodsId,uid);
 					return baseResp;
 				}
 			}
@@ -205,6 +210,7 @@ public class KjGoodsService {
 			if(kjList != null && kjList.size() > 0) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经砍过此商品，请完成活动后再砍!");
+				log.error("【本人发起砍价,该用户已经砍过此商品，请完成活动后再砍!】kjgoodsId:{},uid:{}",kjgoodsId,uid);
 				return baseResp;
 			}
 			
@@ -217,7 +223,7 @@ public class KjGoodsService {
 				if(!flag) {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
-					log.error("该商品库存不足,kjgoodsId:{}",kjgoodsId);
+					log.error("【该商品库存不足】kjgoodsId:{}",kjgoodsId);
 					return baseResp;
 				}
 			}
@@ -279,6 +285,7 @@ public class KjGoodsService {
 	 * @return
 	 */
 	public KjGoodsDetailVo myDetail(String kjcode) {
+		log.info("【本人(好友)查询砍价详情】传入参数:{}",kjcode);
 		List<UserVo> grouperList = new ArrayList<UserVo>();
 		KjGoodsDetailVo detailVo = new KjGoodsDetailVo();
 		List<KjUser> groupers = new ArrayList<KjUser>();
@@ -351,6 +358,7 @@ public class KjGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【好友发起砍价,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			//获取系统用户编号
@@ -360,6 +368,7 @@ public class KjGoodsService {
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【好友发起砍价,商品编号不存在】kjgoodsId:{}",kjgoodsId);
 				return baseResp;
 			}
 			
@@ -374,6 +383,7 @@ public class KjGoodsService {
 			if(kjuser != null) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经砍过此商品，不能再砍价!");
+				log.error("【好友发起砍价,该用户已经砍过此商品，不能再砍价】kjgoodsId:{},uid:{},kjCode:{}",kjgoodsId,uid,kjCode);
 				return baseResp;
 			}
 			//根据砍价编号查询
@@ -393,11 +403,13 @@ public class KjGoodsService {
 				if(grouperSize >= kjSize) {
 					baseResp.setReturnCode(Constant.ACTIVITYALREADYDOWN_FAIL);
 					baseResp.setErrorMessage("该团砍价已完成，不能再砍价!");
+					log.error("【好友发起砍价,该团砍价已完成，不能再砍价】kjCode:{}",kjCode);
 					return baseResp;
 				}
 			}else {
 				baseResp.setReturnCode(Constant.ACTIVITYNOTEXISTS);
 				baseResp.setErrorMessage("该砍价编号不存在!");
+				log.error("【好友发起砍价,砍价编号不存在】kjCode:{}",kjCode);
 				return baseResp;
 			}
 			
@@ -409,7 +421,7 @@ public class KjGoodsService {
 				if(!flag) {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
-					log.error("该商品库存不足,kjgoodsId:{}",kjgoodsId);
+					log.error("【该商品库存不足】kjgoodsId:{}",kjgoodsId);
 					return baseResp;
 				}
 			}

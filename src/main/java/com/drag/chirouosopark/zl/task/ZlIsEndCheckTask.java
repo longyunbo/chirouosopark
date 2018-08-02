@@ -45,7 +45,6 @@ public class ZlIsEndCheckTask {
 						zlGoods.setIsEnd(1);
 						zlGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 						zlGoodsDao.saveAndFlush(zlGoods);
-						log.info("定时任务处理成功，更新数据{}", zlGoods);
 						int goodsId = zlGoods.getZlgoodsId();
 						//查询助力中的人数
 						List<ZlUser> zlList = zlUserDao.findByZlGoodsIdAndZlstatus(goodsId,ZlUser.PTSTATUS_MIDDLE);
@@ -63,6 +62,7 @@ public class ZlIsEndCheckTask {
 							zlGoods.setZlgoodsNumber(zlgoodsNumber + number);
 							zlGoodsDao.saveAndFlush(zlGoods);
 						}
+						log.info("【助力定时任务处理成功】，更新数据{}", zlGoods);
 					}
 				}
 			}

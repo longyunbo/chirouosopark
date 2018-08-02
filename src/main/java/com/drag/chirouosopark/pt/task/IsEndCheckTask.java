@@ -59,7 +59,7 @@ public class IsEndCheckTask {
 						ptGoods.setIsEnd(1);
 						ptGoods.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 						ptGoodsDao.saveAndFlush(ptGoods);
-						log.info("定时任务处理成功，更新数据{}", ptGoods);
+						
 						
 						int goodsId = ptGoods.getPtgoodsId();
 						//查询拼团中的人数
@@ -108,7 +108,7 @@ public class IsEndCheckTask {
 							ptGoods.setPtgoodsNumber(ptgoodsNumber + allNumber);
 							ptGoodsDao.saveAndFlush(ptGoods);
 						}
-						
+						log.info("【拼团定时任务处理成功】，更新数据{}", ptGoods);
 					}
 				}
 			}

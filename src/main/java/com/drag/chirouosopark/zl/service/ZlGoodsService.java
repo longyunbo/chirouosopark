@@ -163,12 +163,14 @@ public class ZlGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【本人发起助力,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			ZlGoods goods = zlGoodsDao.findGoodsDetail(zlgoodsId);
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【本人发起助力,商品编号不存在】ptgoodsId:{}",zlgoodsId);
 				return baseResp;
 			}
 			
@@ -176,6 +178,7 @@ public class ZlGoodsService {
 			if(!authFlag) {
 				baseResp.setReturnCode(Constant.AUTH_OVER);
 				baseResp.setErrorMessage("该用户权限不够!");
+				log.error("【本人发起助力,用户权限不够】user:{}",user);
 				return baseResp;
 			}
 			
@@ -186,6 +189,7 @@ public class ZlGoodsService {
 			if(zlList != null && zlList.size() > 0) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经助力过此商品，请完成活动后再发起!");
+				log.error("【本人发起助力,该用户已经发起此商品，请完成活动后再发起!】kjgoodsId:{},uid:{}",zlgoodsId,uid);
 				return baseResp;
 			}
 			
@@ -200,6 +204,7 @@ public class ZlGoodsService {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
 					log.error("该商品库存不足,zlgoodsId:{}",zlgoodsId);
+					log.error("【该商品库存不足】zlgoodsId:{}",zlgoodsId);
 					return baseResp;
 				}
 			}
@@ -319,6 +324,7 @@ public class ZlGoodsService {
 			if(user == null) {
 				baseResp.setReturnCode(Constant.USERNOTEXISTS);
 				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【好友助力,用户不存在】openid:{}",openid);
 				return baseResp;
 			}
 			//获取系统用户编号
@@ -329,6 +335,7 @@ public class ZlGoodsService {
 			if(goods == null) {
 				baseResp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				baseResp.setErrorMessage("该商品编号不存在!");
+				log.error("【好友助力,商品编号不存在】zlgoodsId:{}",zlgoodsId);
 				return baseResp;
 			}
 			
@@ -336,6 +343,7 @@ public class ZlGoodsService {
 			if(!authFlag) {
 				baseResp.setReturnCode(Constant.AUTH_OVER);
 				baseResp.setErrorMessage("该用户权限不够!");
+				log.error("【好友助力,用户权限不够】user:{}",user);
 				return baseResp;
 			}
 			
@@ -344,6 +352,7 @@ public class ZlGoodsService {
 			if(zluser != null) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经助力过此商品，不能再助力!");
+				log.error("【好友助力,该用户已经助力过此商品，不能再助力】zlgoodsId:{},uid:{},zlCode:{}",zlgoodsId,uid,zlCode);
 				return baseResp;
 			}
 			//根据助力编号查询
@@ -364,11 +373,13 @@ public class ZlGoodsService {
 				if(grouperSize >= zlSize) {
 					baseResp.setReturnCode(Constant.ACTIVITYALREADYDOWN_FAIL);
 					baseResp.setErrorMessage("该团助力已完成，不能再助力!");
+					log.error("【好友助力,该团助力已完成，不能再助力】zlCode:{}",zlCode);
 					return baseResp;
 				}
 			}else {
 				baseResp.setReturnCode(Constant.ACTIVITYNOTEXISTS);
 				baseResp.setErrorMessage("该助力编号不存在!");
+				log.error("【好友助力,该助力编号不存在】zlCode:{}",zlCode);
 				return baseResp;
 			}
 			
@@ -380,7 +391,7 @@ public class ZlGoodsService {
 				if(!flag) {
 					baseResp.setReturnCode(Constant.STOCK_FAIL);
 					baseResp.setErrorMessage("库存不足");
-					log.error("该商品库存不足,zlgoodsId:{}",zlgoodsId);
+					log.error("【该商品库存不足】,zlgoodsId:{}",zlgoodsId);
 					return baseResp;
 				}
 			}

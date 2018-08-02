@@ -2,7 +2,11 @@ package com.drag.chirouosopark.user.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -92,10 +96,24 @@ public class DragGoodsService {
 	public List<UserDragUsedRecordVo> listRecord(String openid) {
 		List<UserDragUsedRecordVo> goodsResp = new ArrayList<UserDragUsedRecordVo>();
 		User user = userDao.findByOpenid(openid);
+		Set<Integer> goodsIds = new HashSet<Integer>();
+		Map<Integer,DragGoods> goodsMap = new HashMap<Integer,DragGoods>();
+		
 		List<UserDragUsedRecord> records = userDragUsedRecordDao.findByUidAndType(user.getId(),Constant.TYPE_DR);
+		if(records != null && records.size() > 0) {
+			for(UserDragUsedRecord record : records) {
+				goodsIds.add(record.getGoodsId());
+			}
+		}
+		List<DragGoods> goodsList = drGoodsDao.findByIdIn(goodsIds);
+		if(goodsList != null && goodsList.size() > 0) {
+			for(DragGoods dr : goodsList) {
+				goodsMap.put(dr.getDrgoodsId(), dr);
+			}
+		}
 		for(UserDragUsedRecord record : records) {
 			UserDragUsedRecordVo vo = new UserDragUsedRecordVo();
-			DragGoods goods = drGoodsDao.findGoodsDetail(record.getGoodsId()); 
+			DragGoods goods = goodsMap.get(record.getGoodsId()); 
 			BeanUtils.copyProperties(record, vo,new String[]{"createTime", "updateTime"});
 			vo.setGoodsName(goods.getDrgoodsName());
 			vo.setCreateTime((DateUtil.format(record.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
@@ -159,18 +177,20 @@ public class DragGoodsService {
 			if(dragGoods == null) {
 				resp.setReturnCode(Constant.PRODUCTNOTEXISTS);
 				resp.setErrorMessage("该商品不存在!");
+				log.error("【恐龙骨立即兑换优惠券,商品编号不存在】goodsId:{}",goodsId);
 				return resp;
 			}
 			if(user == null) {
 				resp.setReturnCode(Constant.USERNOTEXISTS);
 				resp.setErrorMessage("该用户不存在!");
+				log.error("【恐龙骨立即兑换优惠券,用户不存在】openid:{}",openid);
 				return resp;
 			}
 			Boolean flag = this.delDragBone(user,dragBone);
 			if(!flag) {
 				resp.setReturnCode(Constant.STOCK_FAIL);
 				resp.setErrorMessage("恐龙骨不足！");
-				log.error("该用户恐龙骨不足,openid:{}",openid);
+				log.error("【该用户恐龙骨不足】,openid:{}",openid);
 				return resp;
 			}
 			
