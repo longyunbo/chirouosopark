@@ -36,10 +36,10 @@ public class TicketValidhoursTask {
 			//查询未使用的卡券
 			List<UserTicket> ticketList = userTicketDao.findByStatus(UserTicket.STATUS_NO);
 			for (UserTicket ticket : ticketList) {
-				//卡券有效时间，默认为7小时
+				//卡券有效时间，默认为7天
 				int team = ticket.getTerm();
 				Date createTime =  ticket.getCreateTime();
-				long compareDate = (nowTime.getTime() - createTime.getTime()) / (60*60*1000);
+				long compareDate = (nowTime.getTime() - createTime.getTime()) / (60*60*1000*24);
 				if(compareDate >= team) {
 					//设为过期
 					ticket.setStatus(UserTicket.STATUS_OVER);
