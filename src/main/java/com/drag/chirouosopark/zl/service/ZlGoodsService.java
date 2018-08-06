@@ -477,10 +477,10 @@ public class ZlGoodsService {
 						int isHeader = user.getIsHeader();
 //						User us = userDao.findOne(user.getUid());
 						String uid = String.valueOf(user.getUid());
-						//新增恐龙骨
-						dragGoodsService.addDragBone(userMap.get(uid),goods.getZlgoodsId(),goods.getZlgoodsName(),Constant.TYPE_ZL,goods.getDragBone(), goods.getExp());
 						//给团长发送卡券
 						if(ZlUser.ISHEADER_YES == isHeader) {
+							//新增恐龙骨
+							dragGoodsService.addDragBone(userMap.get(uid),goods.getZlgoodsId(),goods.getZlgoodsName(),Constant.TYPE_ZL,goods.getDragBone(), goods.getExp());
 							if(template != null) {
 								UserTicket ticket = new UserTicket();
 								BeanUtils.copyProperties(template, ticket);
