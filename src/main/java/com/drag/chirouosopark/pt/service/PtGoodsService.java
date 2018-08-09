@@ -230,6 +230,7 @@ public class PtGoodsService {
 			ptUser.setGrouperId(uid);
 			ptUser.setPtgoodsId(ptgoodsId);
 			ptUser.setPtcode(ptCode);
+			ptUser.setNumber(number);
 			ptUser.setIsHeader(PtUser.ISHEADER_YES);
 			ptUser.setPtSize(goods.getPtSize());
 			ptUser.setPtstatus(PtUser.PTSTATUS_MIDDLE);
@@ -419,6 +420,7 @@ public class PtGoodsService {
 			ptUser.setGrouperId(grouper.getGrouperId());
 			ptUser.setPtgoodsId(form.getPtgoodsId());
 			ptUser.setPtcode(ptCode);
+			ptUser.setNumber(number);
 			ptUser.setIsHeader(PtUser.ISHEADER_NO);
 			ptUser.setPtSize(goods.getPtSize());
 			ptUser.setPtstatus(PtUser.PTSTATUS_MIDDLE);
@@ -495,6 +497,7 @@ public class PtGoodsService {
 							BeanUtils.copyProperties(template, ticket);
 							ticket.setId(ticket.getId());
 							ticket.setUid(user.getUid());
+							ticket.setNumber(user.getNumber());
 							ticket.setStatus(UserTicket.STATUS_NO);
 							ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 							userTicketDao.save(ticket);

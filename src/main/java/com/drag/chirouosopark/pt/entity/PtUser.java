@@ -67,6 +67,11 @@ public class PtUser implements Serializable {
 	 */
 	private int isHeader;
 	/**
+	 * 购买数量
+	 */
+	private int number;
+	
+	/**
 	 * 拼团人数
 	 */
 	private int ptSize;

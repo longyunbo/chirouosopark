@@ -89,6 +89,10 @@ public class UserTicket implements Serializable {
 	 */
 	private BigDecimal price;
 	/**
+	 * 购买数量
+	 */
+	private int number;
+	/**
 	 * 恐龙骨
 	 */
 	private int dragBone;

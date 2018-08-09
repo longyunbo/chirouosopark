@@ -486,6 +486,7 @@ public class ZlGoodsService {
 								BeanUtils.copyProperties(template, ticket);
 								ticket.setId(ticket.getId());
 								ticket.setUid(user.getUid());
+								ticket.setNumber(1);
 								ticket.setStatus(UserTicket.STATUS_NO);
 								ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 								userTicketDao.save(ticket);
