@@ -13,17 +13,20 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.drag.chirouosopark.common.Constant;
 import com.drag.chirouosopark.common.exception.AMPException;
-import com.drag.chirouosopark.kj.entity.KjUser;
 import com.drag.chirouosopark.ms.dao.MsGoodsDao;
 import com.drag.chirouosopark.ms.dao.MsOrderDao;
+import com.drag.chirouosopark.ms.dao.MsRemindDao;
 import com.drag.chirouosopark.ms.entity.MsGoods;
 import com.drag.chirouosopark.ms.entity.MsOrder;
+import com.drag.chirouosopark.ms.entity.MsRemind;
 import com.drag.chirouosopark.ms.form.MsGoodsForm;
 import com.drag.chirouosopark.ms.resp.MsGoodsResp;
 import com.drag.chirouosopark.ms.vo.MsGoodsDetailVo;
 import com.drag.chirouosopark.ms.vo.MsGoodsVo;
+import com.drag.chirouosopark.ms.vo.MsRemindVo;
 import com.drag.chirouosopark.user.dao.UserDao;
 import com.drag.chirouosopark.user.dao.UserTicketDao;
 import com.drag.chirouosopark.user.dao.UserTicketTemplateDao;
@@ -45,6 +48,8 @@ public class MsGoodsService {
 	private MsGoodsDao msGoodsDao;
 	@Autowired
 	private MsOrderDao msOrderDao;
+	@Autowired
+	private MsRemindDao msRemindDao;
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -225,6 +230,73 @@ public class MsGoodsService {
 		return baseResp;
 	}
 	
+	/**
+	 * 秒杀提醒
+	 * @param form
+	 * @return
+	 */
+	@Transactional
+	public MsGoodsResp remind(MsGoodsForm form) {
+		log.info("【秒杀提醒,传入参数】form:{}",JSON.toJSONString(form));
+		MsGoodsResp baseResp = new MsGoodsResp();
+		try {
+			String openid = form.getOpenid();
+			User user = userDao.findByOpenid(openid);
+			if(user == null) {
+				baseResp.setReturnCode(Constant.USERNOTEXISTS);
+				baseResp.setErrorMessage("该用户不存在!");
+				log.error("【秒杀提醒,用户不存在】openid:{}",openid);
+				return baseResp;
+			}
+			int msgoodsId = form.getMsgoodsId();
+			MsRemind remind = msRemindDao.findByMsgoodsIdAndOpenid(msgoodsId, openid);
+			if(remind != null) {
+				int remindType = form.getRemindType();
+				if(remindType == 0) {
+					remind.setStatus(MsRemind.STATUS_YES);
+				}else {
+					remind.setStatus(MsRemind.STATUS_NO);
+				}
+				msRemindDao.saveAndFlush(remind);
+			}else {
+				MsRemind remd = new MsRemind();
+				remd.setId(remd.getId());
+				remd.setOpenid(openid);
+				remd.setMsgoodsId(msgoodsId);
+				remd.setMsgoodsName(form.getMsgoodsName());
+				remd.setStatus(MsRemind.STATUS_YES);
+				remd.setFormId(form.getFormId());
+				remd.setCreateTime(new Timestamp(System.currentTimeMillis()));
+				msRemindDao.save(remd);
+			}
+			//返回参数
+			baseResp.setReturnCode(Constant.SUCCESS);
+			baseResp.setErrorMessage("秒杀提醒设置成功！");
+		} catch (Exception e) {
+			log.error("系统异常,{}",e);
+			throw AMPException.getException("系统异常!");
+		}
+		return baseResp;
+	}
+	
+	/**
+	 * 查询秒杀提醒
+	 * @param openid
+	 * @return
+	 */
+	public List<MsRemindVo> remindList(String openid) {
+		List<MsRemindVo> resp = new  ArrayList<MsRemindVo>();
+		List<MsRemind> msList =  msRemindDao.findByOpenid(openid);
+		if(msList != null && msList.size() > 0) {
+			for(MsRemind ms : msList) {
+				MsRemindVo vo = new MsRemindVo();
+				BeanUtils.copyProperties(ms, vo,new String[]{"createTime"});
+				vo.setCreateTime((DateUtil.format(ms.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
+				resp.add(vo);
+			}
+		}
+		return resp;
+	}
 	
 	/**
 	 * 秒杀商品减库存

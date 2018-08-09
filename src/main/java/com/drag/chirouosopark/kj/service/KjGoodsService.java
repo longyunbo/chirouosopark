@@ -379,8 +379,9 @@ public class KjGoodsService {
 //				return baseResp;
 //			}
 			//同一个用户砍价校验
-			KjUser kjuser = kjUserDao.findByKjGoodsIdAndUidAndKjCode(kjgoodsId, uid, kjCode);
-			if(kjuser != null) {
+//			KjUser kjuser = kjUserDao.findByKjGoodsIdAndUidAndKjCode(kjgoodsId, uid, kjCode);
+			List<KjUser> kjuser = kjUserDao.findByKjGoodsIdAndUidAndIsHeader(kjgoodsId, uid, KjUser.ISHEADER_NO);
+			if(kjuser != null && kjuser.size() > 0) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经砍过此商品，不能再砍价!");
 				log.error("【好友发起砍价,该用户已经砍过此商品，不能再砍价】kjgoodsId:{},uid:{},kjCode:{}",kjgoodsId,uid,kjCode);

@@ -19,6 +19,7 @@ import com.drag.chirouosopark.ms.resp.MsGoodsResp;
 import com.drag.chirouosopark.ms.service.MsGoodsService;
 import com.drag.chirouosopark.ms.vo.MsGoodsDetailVo;
 import com.drag.chirouosopark.ms.vo.MsGoodsVo;
+import com.drag.chirouosopark.ms.vo.MsRemindVo;
 
 
 @RestController
@@ -72,5 +73,26 @@ public class MsGoodsController {
 		return new ResponseEntity<MsGoodsResp>(br, HttpStatus.OK);
 	}
 	
+	/**
+	 * 秒杀提醒
+	 * @param form
+	 * @return
+	 */
+	@RequestMapping(value = "/remind", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody ResponseEntity<MsGoodsResp> remind(@RequestBody MsGoodsForm form) {
+		MsGoodsResp br = msGoodsService.remind(form);
+		return new ResponseEntity<MsGoodsResp>(br, HttpStatus.OK);
+	}
+	
+	/**
+	 * 查询秒杀提醒列表
+	 * @param openid
+	 * @return
+	 */
+	@RequestMapping(value = "/remindlist", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody ResponseEntity<List<MsRemindVo>> remindList(@RequestParam String openid) {
+		List<MsRemindVo> br = msGoodsService.remindList(openid);
+		return new ResponseEntity<List<MsRemindVo>>(br, HttpStatus.OK);
+	}
 	
 }

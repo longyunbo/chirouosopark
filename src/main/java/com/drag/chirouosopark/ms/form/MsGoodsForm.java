@@ -14,21 +14,13 @@ public class MsGoodsForm {
 	 */
 	private String openid;
 	/**
-	 * 退款单编号
-	 */
-//	private String msrefundcode;
-	/**
 	 * 商品名称
 	 */
-//	private String msgoodsName;
+	private String msgoodsName;
 	/**
-	 * 单价
+	 * 提醒类型 '0-开抢提醒,1-取消提醒',
 	 */
-//	private BigDecimal perPrice;
-	/**
-	 * 付款金额
-	 */
-//	private BigDecimal price;
+	private int remindType;
 	/**
 	 * 数量
 	 */
