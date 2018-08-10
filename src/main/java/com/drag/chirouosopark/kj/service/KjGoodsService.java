@@ -415,17 +415,17 @@ public class KjGoodsService {
 			}
 			
 			//购买数量
-			int number = 1;
-			if(goods != null) {
-				//减库存
-				Boolean flag = this.delStock(goods,number);
-				if(!flag) {
-					baseResp.setReturnCode(Constant.STOCK_FAIL);
-					baseResp.setErrorMessage("库存不足");
-					log.error("【该商品库存不足】kjgoodsId:{}",kjgoodsId);
-					return baseResp;
-				}
-			}
+//			int number = 1;
+//			if(goods != null) {
+//				//减库存
+//				Boolean flag = this.delStock(goods,number);
+//				if(!flag) {
+//					baseResp.setReturnCode(Constant.STOCK_FAIL);
+//					baseResp.setErrorMessage("库存不足");
+//					log.error("【该商品库存不足】kjgoodsId:{}",kjgoodsId);
+//					return baseResp;
+//				}
+//			}
 			
 			//砍价用户表中也插入一条数据
 			KjUser kjUser = new KjUser();
