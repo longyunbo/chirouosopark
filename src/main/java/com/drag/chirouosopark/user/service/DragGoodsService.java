@@ -105,19 +105,21 @@ public class DragGoodsService {
 				goodsIds.add(record.getGoodsId());
 			}
 		}
-		List<DragGoods> goodsList = drGoodsDao.findByIdIn(goodsIds);
-		if(goodsList != null && goodsList.size() > 0) {
-			for(DragGoods dr : goodsList) {
-				goodsMap.put(dr.getDrgoodsId(), dr);
+		if(goodsIds != null && goodsIds.size() > 0) {
+			List<DragGoods> goodsList = drGoodsDao.findByIdIn(goodsIds);
+			if(goodsList != null && goodsList.size() > 0) {
+				for(DragGoods dr : goodsList) {
+					goodsMap.put(dr.getDrgoodsId(), dr);
+				}
 			}
-		}
-		for(UserDragUsedRecord record : records) {
-			UserDragUsedRecordVo vo = new UserDragUsedRecordVo();
-			DragGoods goods = goodsMap.get(record.getGoodsId()); 
-			BeanUtils.copyProperties(record, vo,new String[]{"createTime", "updateTime"});
-			vo.setGoodsName(goods.getDrgoodsName());
-			vo.setCreateTime((DateUtil.format(record.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
-			goodsResp.add(vo);
+			for(UserDragUsedRecord record : records) {
+				UserDragUsedRecordVo vo = new UserDragUsedRecordVo();
+				DragGoods goods = goodsMap.get(record.getGoodsId()); 
+				BeanUtils.copyProperties(record, vo,new String[]{"createTime", "updateTime"});
+				vo.setGoodsName(goods.getDrgoodsName());
+				vo.setCreateTime((DateUtil.format(record.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
+				goodsResp.add(vo);
+			}
 		}
 		return goodsResp;
 	}
