@@ -55,7 +55,9 @@ public class ZlIsEndCheckTask {
 								//把在助力中的状态的修改成失败
 								ku.setZlstatus(ZlUser.PTSTATUS_FAIL);
 								zlUserDao.saveAndFlush(ku);
-								number ++ ;
+								if(ZlUser.ISHEADER_YES == ku.getIsHeader()) {
+									number ++ ;
+								}
 							}
 							//回滚库存
 							int zlgoodsNumber = zlGoods.getZlgoodsNumber();

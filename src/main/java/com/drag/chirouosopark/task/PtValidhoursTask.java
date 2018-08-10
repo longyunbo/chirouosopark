@@ -55,6 +55,8 @@ public class PtValidhoursTask {
 				//根据商品编号查询出拼团中的团长，如果团长的创建时间过期了，把整个拼团的关掉
 				List<PtUser> userList = ptUserDao.findByGoodsIdAndStatusAndIsHeader(goodsId, PtUser.PTSTATUS_MIDDLE,PtUser.ISHEADER_YES);
 				Set<String> ptcodes = new HashSet<String>();
+				//购买多少份
+				int number = 0;
 				if(userList != null && userList.size() > 0) {
 					for(PtUser user : userList) {
 						Date createTime =  user.getCreateTime();
@@ -77,6 +79,7 @@ public class PtValidhoursTask {
 				if(ptcodes != null && ptcodes.size() > 0) {
 					List<PtOrder> orders = ptOrderDao.findByPtCodeIn(ptcodes);
 					for(PtOrder order : orders) {
+						number = number + order.getNumber();
 						String ptrefundcode = order.getPtrefundcode();
 						if(StringUtil.isEmpty(ptrefundcode)) {
 							String out_trade_no = order.getOutTradeNo();
@@ -99,6 +102,10 @@ public class PtValidhoursTask {
 							ptOrderDao.saveAndFlush(order);
 						}
 					}
+					//回滚库存
+					int ptgoodsNumber = ptGoods.getPtgoodsNumber();
+					ptGoods.setPtgoodsNumber(ptgoodsNumber + number);
+					ptGoodsDao.saveAndFlush(ptGoods);
 				}
 			}
 		} catch (Exception e) {

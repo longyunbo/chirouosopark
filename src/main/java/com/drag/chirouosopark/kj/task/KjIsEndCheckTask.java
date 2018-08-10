@@ -57,7 +57,9 @@ public class KjIsEndCheckTask {
 								//把在砍价中的状态修改成失败
 								ku.setKjstatus(KjUser.PTSTATUS_FAIL);
 								kjUserDao.saveAndFlush(ku);
-								number ++ ;
+								if(KjUser.ISHEADER_YES == ku.getIsHeader()) {
+									number ++ ;
+								}
 							}
 							//回滚库存
 							int kjgoodsNumber = kjGoods.getKjgoodsNumber();

@@ -48,6 +48,8 @@ public class ZlValidhoursTask {
 				//根据商品编号查询出砍价中的团长用户
 				List<ZlUser> userList = zlUserDao.findByZlGoodsIdAndZlstatusAndIsHeader(goodsId, ZlUser.PTSTATUS_MIDDLE,ZlUser.ISHEADER_YES);
 				Set<String> zlcodes = new HashSet<String>();
+				//助力的默认数量为1个 
+				int number = 0;
 				if(userList != null && userList.size() > 0) {
 					for(ZlUser user : userList) {
 						Date createTime =  user.getCreateTime();
@@ -64,8 +66,15 @@ public class ZlValidhoursTask {
 								//修改为砍价失败
 								user.setZlstatus(ZlUser.PTSTATUS_FAIL);
 								zlUserDao.saveAndFlush(user);
+								if(ZlUser.ISHEADER_YES == user.getIsHeader()) {
+									number ++ ;
+								}
 							}
 						}
+						//回滚库存
+						int zlgoodsNumber = zlGoods.getZlgoodsNumber();
+						zlGoods.setZlgoodsNumber(zlgoodsNumber + number);
+						zlGoodsDao.saveAndFlush(zlGoods);
 					}
 				}
 			}

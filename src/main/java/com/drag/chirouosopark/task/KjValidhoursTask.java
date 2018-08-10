@@ -48,6 +48,8 @@ public class KjValidhoursTask {
 				//根据商品编号查询出砍价中的用户
 				List<KjUser> userList = kjUserDao.findByKjGoodsIdAndKjstatusAndIsHeader(goodsId, KjUser.PTSTATUS_MIDDLE,KjUser.ISHEADER_YES);
 				Set<String> kjcodes = new HashSet<String>();
+				//砍价的默认数量为1个 
+				int number = 0;
 				if(userList != null && userList.size() > 0) {
 					for(KjUser user : userList) {
 						Date createTime =  user.getCreateTime();
@@ -64,8 +66,15 @@ public class KjValidhoursTask {
 								//修改为砍价失败
 								user.setKjstatus(ZlUser.PTSTATUS_FAIL);
 								kjUserDao.saveAndFlush(user);
+								if(KjUser.ISHEADER_YES == user.getIsHeader()) {
+									number ++ ;
+								}
 							}
 						}
+						//回滚库存
+						int kjgoodsNumber = kjGoods.getKjgoodsNumber();
+						kjGoods.setKjgoodsNumber(kjgoodsNumber + number);
+						kjGoodsDao.saveAndFlush(kjGoods);
 					}
 				}
 			}
