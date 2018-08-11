@@ -339,17 +339,17 @@ public class ZlGoodsService {
 				return baseResp;
 			}
 			
-			Boolean authFlag =  userService.checkAuth(user, goods.getAuth());
-			if(!authFlag) {
-				baseResp.setReturnCode(Constant.AUTH_OVER);
-				baseResp.setErrorMessage("该用户权限不够!");
-				log.error("【好友助力,用户权限不够】user:{}",user);
-				return baseResp;
-			}
-			
+//			Boolean authFlag =  userService.checkAuth(user, goods.getAuth());
+//			if(!authFlag) {
+//				baseResp.setReturnCode(Constant.AUTH_OVER);
+//				baseResp.setErrorMessage("该用户权限不够!");
+//				log.error("【好友助力,用户权限不够】user:{}",user);
+//				return baseResp;
+//			}
 			//同一个用户助力校验
-			ZlUser zluser = zlUserDao.findByZlGoodsIdAndUidAndZlCode(zlgoodsId, uid, zlCode);
-			if(zluser != null) {
+//			ZlUser zluser = zlUserDao.findByZlGoodsIdAndUidAndZlCode(zlgoodsId, uid, zlCode);
+			List<ZlUser> zluser = zlUserDao.findByZlGoodsIdAndUidAndIsHeader(zlgoodsId, uid, ZlUser.ISHEADER_NO);
+			if(zluser != null  && zluser.size() > 0) {
 				baseResp.setReturnCode(Constant.USERALREADYIN_FAIL);
 				baseResp.setErrorMessage("该用户已经助力过此商品，不能再助力!");
 				log.error("【好友助力,该用户已经助力过此商品，不能再助力】zlgoodsId:{},uid:{},zlCode:{}",zlgoodsId,uid,zlCode);
