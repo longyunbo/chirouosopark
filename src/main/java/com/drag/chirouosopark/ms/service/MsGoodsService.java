@@ -207,14 +207,16 @@ public class MsGoodsService {
 			UserTicketTemplate  template = userTicketTemplateDao.findByGoodsIdAndType(msgoodsId, type);
 			//发送卡券
 			if(template != null) {
-				UserTicket ticket = new UserTicket();
-				BeanUtils.copyProperties(template, ticket);
-				ticket.setId(ticket.getId());
-				ticket.setUid(uid);
-				ticket.setNumber(number);
-				ticket.setStatus(UserTicket.STATUS_NO);
-				ticket.setCreateTime((new Timestamp(System.currentTimeMillis())));
-				userTicketDao.save(ticket);
+				for(int i = 0;i < number; i++) {
+					UserTicket ticket = new UserTicket();
+					BeanUtils.copyProperties(template, ticket);
+					ticket.setId(ticket.getId());
+					ticket.setUid(uid);
+					ticket.setNumber(1);
+					ticket.setStatus(UserTicket.STATUS_NO);
+					ticket.setCreateTime((new Timestamp(System.currentTimeMillis())));
+					userTicketDao.save(ticket);
+				}
 			}
 			
 			//返回参数

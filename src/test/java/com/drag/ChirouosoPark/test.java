@@ -89,7 +89,10 @@ public class test {
 //		Date tTime = new Timestamp();
 //		int ptValidhours =1;
 		Date d = new Date(12121212);
-		
+		int number = 3;
+		for(int i = 0;i < number; i++) {
+			System.out.println("aaa");
+		}
 	}
 	
 	 public void getResource() throws IOException{  

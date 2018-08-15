@@ -493,14 +493,17 @@ public class PtGoodsService {
 					for(PtUser user : ptList) {
 						//发送卡券
 						if(template != null) {
-							UserTicket ticket = new UserTicket();
-							BeanUtils.copyProperties(template, ticket);
-							ticket.setId(ticket.getId());
-							ticket.setUid(user.getUid());
-							ticket.setNumber(user.getNumber());
-							ticket.setStatus(UserTicket.STATUS_NO);
-							ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
-							userTicketDao.save(ticket);
+							int number = user.getNumber();
+							for(int i = 0;i < number; i++) {
+								UserTicket ticket = new UserTicket();
+								BeanUtils.copyProperties(template, ticket);
+								ticket.setId(ticket.getId());
+								ticket.setUid(user.getUid());
+								ticket.setNumber(1);
+								ticket.setStatus(UserTicket.STATUS_NO);
+								ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
+								userTicketDao.save(ticket);
+							}
 						}
 						//发送消息
 						JSONObject json = new JSONObject();

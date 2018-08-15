@@ -88,6 +88,7 @@ public class UserTicketService {
 				UserTicket ticket = new UserTicket();
 				BeanUtils.copyProperties(template, ticket);
 				ticket.setUid(uid);
+				ticket.setNumber(1);
 				ticket.setStatus(UserTicket.STATUS_NO);
 				ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 				userTicketDao.save(ticket);
