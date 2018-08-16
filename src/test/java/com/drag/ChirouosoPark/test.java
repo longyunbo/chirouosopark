@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.utils.HttpsUtil;
+import com.drag.chirouosopark.utils.MoneyUtil;
 
 public class test {
 
@@ -88,11 +89,9 @@ public class test {
 		Date nowTime = new Timestamp(System.currentTimeMillis());
 //		Date tTime = new Timestamp();
 //		int ptValidhours =1;
-		Date d = new Date(12121212);
-		int number = 3;
-		for(int i = 0;i < number; i++) {
-			System.out.println("aaa");
-		}
+		
+		System.out.println(MoneyUtil.randomRedPacket(222, 0.1f, 5f, 100));
+		System.out.println(MoneyUtil.splitRedPackets(222, 100));
 	}
 	
 	 public void getResource() throws IOException{  

@@ -391,7 +391,11 @@ public class KjGoodsService {
 			List<KjUser> kjList = kjUserDao.findByKjCode(kjCode);
 			//获取团长
 			KjUser grouper = null;
+			
+			BigDecimal alreadyPrice = BigDecimal.ZERO;
 			for(KjUser us: kjList) {
+				//已经砍过的总金额
+				alreadyPrice = alreadyPrice.add(us.getPrice());
 				if(us.getIsHeader() == PtUser.ISHEADER_YES) {
 					grouper = us;
 				}
@@ -439,13 +443,25 @@ public class KjGoodsService {
 			kjUser.setKjSize(goods.getKjSize());
 			
 			//商品默认价格
-			BigDecimal kjPrice = goods.getKjPrice();
+//			BigDecimal kjPrice = goods.getKjPrice();
 			
-			BigDecimal alreadyPrice = BigDecimal.ZERO;
-			for (KjUser kUser : kjList) {
-				alreadyPrice = alreadyPrice.add(kUser.getPrice());
+//			BigDecimal alreadyPrice = BigDecimal.ZERO;
+//			for (KjUser kUser : kjList) {
+//				alreadyPrice = alreadyPrice.add(kUser.getPrice());
+//			}
+//			float price = MoneyUtil.randomRedPacket(kjPrice.subtract(alreadyPrice).floatValue(), 1, 20, kjSize - grouperSize);
+			
+			//商品默认价格
+			BigDecimal kjPrice = goods.getKjPrice();
+			float price = 0;
+			if(grouperSize < 20) {
+				price = MoneyUtil.randomRedPacket(kjPrice.subtract(alreadyPrice).floatValue(), 1, 8, kjSize - grouperSize);
+			}else if(grouperSize >= 20 && grouperSize < 50){
+				price = MoneyUtil.randomRedPacket(kjPrice.subtract(alreadyPrice).floatValue(), 1, 4, kjSize - grouperSize);
+			}else {
+				price = MoneyUtil.randomRedPacket(kjPrice.subtract(alreadyPrice).floatValue(), 0.1f, 0.8f, kjSize - grouperSize);
 			}
-			float price = MoneyUtil.randomRedPacket(kjPrice.subtract(alreadyPrice).floatValue(), 1, 20, kjSize - grouperSize);
+			
 			BigDecimal priceB = new BigDecimal(price);
 			kjUser.setPrice(priceB);
 			
