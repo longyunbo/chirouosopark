@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.common.Constant;
 import com.drag.chirouosopark.common.exception.AMPException;
@@ -163,6 +164,7 @@ public class KjGoodsService {
 	 */
 	@Transactional
 	public KjGoodsResp collage(KjGoodsForm form) {
+		log.info("【本人发起砍价,传入参数】form:{}",JSON.toJSONString(form));
 		KjGoodsResp baseResp = new KjGoodsResp();
 		try {
 			int kjgoodsId = form.getKjgoodsId();
@@ -342,6 +344,7 @@ public class KjGoodsService {
 	 */
 	@Transactional
 	public KjGoodsResp friendcollage(KjGoodsForm form) {
+		log.info("【好友帮忙砍价,传入参数】form:{}",JSON.toJSONString(form));
 		KjGoodsResp baseResp = new KjGoodsResp();
 		try {
 			//砍价规模
@@ -550,6 +553,7 @@ public class KjGoodsService {
 								ticket.setStatus(UserTicket.STATUS_NO);
 								ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 								userTicketDao.save(ticket);
+								log.info("【砍价发送卡券插入成功】ticket:{}",JSON.toJSONString(ticket));
 							}
 							JSONObject json = new JSONObject();
 							//openid

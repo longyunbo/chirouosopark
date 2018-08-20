@@ -98,29 +98,31 @@ public class DragGoodsService {
 		User user = userDao.findByOpenid(openid);
 		Set<Integer> goodsIds = new HashSet<Integer>();
 		Map<Integer,DragGoods> goodsMap = new HashMap<Integer,DragGoods>();
-		
-		List<UserDragUsedRecord> records = userDragUsedRecordDao.findByUidAndType(user.getId(),Constant.TYPE_DR);
-		if(records != null && records.size() > 0) {
-			for(UserDragUsedRecord record : records) {
-				goodsIds.add(record.getGoodsId());
-			}
-		}
-		if(goodsIds != null && goodsIds.size() > 0) {
-			List<DragGoods> goodsList = drGoodsDao.findByIdIn(goodsIds);
-			if(goodsList != null && goodsList.size() > 0) {
-				for(DragGoods dr : goodsList) {
-					goodsMap.put(dr.getDrgoodsId(), dr);
+		if(user != null ) {
+			List<UserDragUsedRecord> records = userDragUsedRecordDao.findByUidAndType(user.getId(),Constant.TYPE_DR);
+			if(records != null && records.size() > 0) {
+				for(UserDragUsedRecord record : records) {
+					goodsIds.add(record.getGoodsId());
 				}
 			}
-			for(UserDragUsedRecord record : records) {
-				UserDragUsedRecordVo vo = new UserDragUsedRecordVo();
-				DragGoods goods = goodsMap.get(record.getGoodsId()); 
-				BeanUtils.copyProperties(record, vo,new String[]{"createTime", "updateTime"});
-				vo.setGoodsName(goods.getDrgoodsName());
-				vo.setCreateTime((DateUtil.format(record.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
-				goodsResp.add(vo);
+			if(goodsIds != null && goodsIds.size() > 0) {
+				List<DragGoods> goodsList = drGoodsDao.findByIdIn(goodsIds);
+				if(goodsList != null && goodsList.size() > 0) {
+					for(DragGoods dr : goodsList) {
+						goodsMap.put(dr.getDrgoodsId(), dr);
+					}
+				}
+				for(UserDragUsedRecord record : records) {
+					UserDragUsedRecordVo vo = new UserDragUsedRecordVo();
+					DragGoods goods = goodsMap.get(record.getGoodsId()); 
+					BeanUtils.copyProperties(record, vo,new String[]{"createTime", "updateTime"});
+					vo.setGoodsName(goods.getDrgoodsName());
+					vo.setCreateTime((DateUtil.format(record.getCreateTime(), "yyyy-MM-dd HH:mm:ss")));
+					goodsResp.add(vo);
+				}
 			}
 		}
+		
 		return goodsResp;
 	}
 	

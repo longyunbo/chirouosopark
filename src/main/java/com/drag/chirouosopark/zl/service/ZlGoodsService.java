@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.common.Constant;
 import com.drag.chirouosopark.common.exception.AMPException;
@@ -155,6 +156,7 @@ public class ZlGoodsService {
 	 */
 	@Transactional
 	public ZlGoodsResp collage(ZlGoodsForm form) {
+		log.info("【本人发起助力,传入参数】form:{}",JSON.toJSONString(form));
 		ZlGoodsResp baseResp = new ZlGoodsResp();
 		try {
 			int zlgoodsId = form.getZlgoodsId();
@@ -309,6 +311,7 @@ public class ZlGoodsService {
 	 */
 	@Transactional
 	public ZlGoodsResp friendcollage(ZlGoodsForm form) {
+		log.info("【好友助力,传入参数】form:{}",JSON.toJSONString(form));
 		ZlGoodsResp baseResp = new ZlGoodsResp();
 		try {
 			//助力规模
@@ -490,6 +493,7 @@ public class ZlGoodsService {
 								ticket.setStatus(UserTicket.STATUS_NO);
 								ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 								userTicketDao.save(ticket);
+								log.info("【助力发送卡券插入成功】ticket:{}",JSON.toJSONString(ticket));
 							}
 							
 							JSONObject json = new JSONObject();

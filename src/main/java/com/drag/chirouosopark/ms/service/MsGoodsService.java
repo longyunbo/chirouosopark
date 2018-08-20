@@ -151,6 +151,7 @@ public class MsGoodsService {
 	 */
 	@Transactional
 	public MsGoodsResp collage(MsGoodsForm form) {
+		log.info("【秒杀,传入参数】form:{}",JSON.toJSONString(form));
 		MsGoodsResp baseResp = new MsGoodsResp();
 		try {
 			//商品编号
@@ -197,6 +198,8 @@ public class MsGoodsService {
 			msOrder.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			msOrderDao.save(msOrder);
 			
+			log.info("【秒杀,订单插入成功】msOrder:{}",JSON.toJSONString(msOrder));
+			
 			//新增秒杀次数
 			this.addMsTimes(goods);
 			
@@ -216,6 +219,7 @@ public class MsGoodsService {
 					ticket.setStatus(UserTicket.STATUS_NO);
 					ticket.setCreateTime((new Timestamp(System.currentTimeMillis())));
 					userTicketDao.save(ticket);
+					log.info("【秒杀,发送卡券成功】ticket:{}",JSON.toJSONString(ticket));
 				}
 			}
 			

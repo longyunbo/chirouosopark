@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.common.Constant;
 import com.drag.chirouosopark.common.exception.AMPException;
@@ -158,6 +159,7 @@ public class PtGoodsService {
 	 */
 	@Transactional
 	public PtGoodsResp collage(PtGoodsForm form) {
+		log.info("【本人发起拼团,传入参数】form:{}",JSON.toJSONString(form));
 		PtGoodsResp baseResp = new PtGoodsResp();
 		try {
 			int ptgoodsId = form.getPtgoodsId();
@@ -224,6 +226,8 @@ public class PtGoodsService {
 			ptOrder.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			ptOrderDao.save(ptOrder);
 			
+			log.info("【拼团订单插入成功】ptOrder:{}",JSON.toJSONString(ptOrder));
+			
 			//拼团用户表中也插入一条数据
 			PtUser ptUser = new PtUser();
 			ptUser.setUid(uid);
@@ -237,6 +241,8 @@ public class PtGoodsService {
 			ptUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			ptUser.setFormId(form.getFormId());
 			ptUserDao.save(ptUser);
+			
+			log.info("【拼团用户插入成功】ptUser:{}",JSON.toJSONString(ptUser));
 			
 			//新增拼团次数
 			this.addPtTimes(goods);
@@ -311,6 +317,7 @@ public class PtGoodsService {
 	 */
 	@Transactional
 	public PtGoodsResp friendcollage(PtGoodsForm form) {
+		log.info("【好友拼团,传入参数】form:{}",JSON.toJSONString(form));
 		PtGoodsResp baseResp = new PtGoodsResp();
 		try {
 			//拼团规模
@@ -413,6 +420,8 @@ public class PtGoodsService {
 			ptOrder.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			ptOrderDao.save(ptOrder);
 			
+			log.info("【好友拼团订单插入成功】ptOrder:{}",JSON.toJSONString(ptOrder));
+			
 			//拼团用户表中也插入一条数据
 			PtUser ptUser = new PtUser();
 			ptUser.setId(ptUser.getId());
@@ -427,6 +436,9 @@ public class PtGoodsService {
 			ptUser.setFormId(form.getFormId());
 			ptUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			ptUserDao.save(ptUser);
+			
+			log.info("【好友拼团用户插入成功】ptUser:{}",JSON.toJSONString(ptUser));
+			
 			ptList.add(ptUser);
 			//新增拼团次数
 			this.addPtTimes(goods);
@@ -503,6 +515,7 @@ public class PtGoodsService {
 								ticket.setStatus(UserTicket.STATUS_NO);
 								ticket.setCreateTime(new Timestamp(System.currentTimeMillis()));
 								userTicketDao.save(ticket);
+								log.info("【拼团发送卡券插入成功】ticket:{}",JSON.toJSONString(ticket));
 							}
 						}
 						//发送消息
