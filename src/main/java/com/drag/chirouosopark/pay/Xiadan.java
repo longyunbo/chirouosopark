@@ -29,6 +29,7 @@ public class Xiadan {
 	public static JSONObject wxPay(HttpServletRequest request,String openid,int price) {
 		JSONObject json = new JSONObject();
 		try {
+			log.info("-------下单参数openid:{},price:{}" + openid,price);
 			String out_trade_no = RandomStringGenerator.getRandomStringByLength(32);
 			OrderInfo order = new OrderInfo();
 			order.setAppid(Configure.appid);
@@ -48,7 +49,7 @@ public class Xiadan {
 
 			String result = HttpRequest.sendPost("https://api.mch.weixin.qq.com/pay/unifiedorder", order);
 			System.out.println(result);
-			L.info("---------下单返回:" + result);
+			log.info("---------下单返回:" + result);
 			XStream xStream = new XStream();
 			xStream.alias("xml", OrderReturnInfo.class);
 
@@ -58,7 +59,7 @@ public class Xiadan {
 			return itemJSONObj;
 		} catch (Exception e) {
 			e.printStackTrace();
-			L.error("-------", e);
+			log.error("-------", e);
 		}
 		return json;
 

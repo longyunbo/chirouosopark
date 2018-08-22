@@ -55,7 +55,7 @@ public class PayReturn {
 //			String result = HttpRequest.sendPost("https://api.mch.weixin.qq.com/secapi/pay/refund", returnInfo);
 			String result = CertHttpUtil.postData("https://api.mch.weixin.qq.com/secapi/pay/refund", returnInfo, Configure.mch_id, certPath);
 			System.out.println(result);
-			L.info("---------退款返回:" + result);
+			log.info("---------退款返回:" + result);
 			XStreamEx xStream = new XStreamEx(new DomDriver("utf-8"));
 //			XStream xStream = new XStream();
 			xStream.alias("xml", PayReturnResultInfo.class);
@@ -65,7 +65,7 @@ public class PayReturn {
 			return itemJSONObj;
 		} catch (Exception e) {
 			e.printStackTrace();
-			L.error("-------", e);
+			log.error("-------", e);
 		}
 		return json;
 

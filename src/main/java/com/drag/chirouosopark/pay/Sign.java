@@ -37,11 +37,11 @@ public class Sign {
 			json.put("package", signInfo.getRepay_id());
 			json.put("signType", signInfo.getSignType());
 			json.put("paySign", sign);
-			L.info("-------再签名:" + json.toJSONString());
+			log.info("-------再签名:" + json.toJSONString());
 			return json;
 		} catch (Exception e) {
 			e.printStackTrace();
-			L.error("-------", e);
+			log.error("-------", e);
 		}
 		return json;
 	}
