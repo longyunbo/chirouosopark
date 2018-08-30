@@ -2,6 +2,9 @@ package com.drag.chirouosopark.pt.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import com.drag.chirouosopark.pt.resp.PtGoodsResp;
 import com.drag.chirouosopark.pt.service.PtGoodsService;
 import com.drag.chirouosopark.pt.vo.PtGoodsDetailVo;
 import com.drag.chirouosopark.pt.vo.PtGoodsVo;
+import com.drag.chirouosopark.utils.WxUtil;
 
 
 @RestController
@@ -91,8 +95,20 @@ public class PtGoodsController {
 	@RequestMapping(value = "/freindcollage", method = {RequestMethod.POST,RequestMethod.GET})
 	public @ResponseBody ResponseEntity<PtGoodsResp> freindcollage(@RequestBody PtGoodsForm form) {
 		PtGoodsResp br = ptGoodsService.friendcollage(form);
-//		ptGoodsService.updatePtstatus(form);
 		return new ResponseEntity<PtGoodsResp>(br, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * 生成海报
+	 * @param code
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping(value = "/poster", method = {RequestMethod.POST,RequestMethod.GET})
+	public @ResponseBody ResponseEntity<String> poster(HttpServletRequest request,HttpServletResponse response) {
+		WxUtil.getPoster(request,response);
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
 	}
 	
 	

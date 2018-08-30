@@ -2,7 +2,6 @@ package com.drag.chirouosopark.user.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Id;
 
@@ -24,25 +23,17 @@ public class UserVo implements Serializable {
 	 */
 	private String openid;
 	/**
+	 * 是否团长 0-不是 1-是
+	 */
+	private int isHeader;
+	/**
 	 * 头像
 	 */
 	private String avatar;
 	/**
-	 * 性别
-	 */
-//	private int sex;
-	/**
 	 * 昵称
 	 */
 	private String nickname;
-	/**
-	 * 真实姓名
-	 */
-//	private String realname;
-	/**
-	 * 年龄
-	 */
-//	private int age;
 	/**
 	 * 会员等级
 	 */

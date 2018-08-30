@@ -7,15 +7,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -27,8 +32,12 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.drag.chirouosopark.common.manager.MyX509TrustManager;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class HttpsUtil {
 	/*
 	 * 处理https GET/POST请求
@@ -100,5 +109,41 @@ public class HttpsUtil {
 		return result;
 	}
  
+	
+	/**
+     *获取 数据流
+     *@Params: [url, map]
+     *@Date: 2018/5/15 15:34
+     *@Author: jinghan
+     */ 
+    public static byte[] doImgPost(String url, Map<String,Object> map){
+    	HttpClient httpClient = null;
+        byte[] result = null;
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.addHeader("Content-Type", "application/json");
+        try {
+        	httpClient = new SSLClient();
+            // 设置请求的参数
+            JSONObject postData = new JSONObject();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                postData.put(entry.getKey(), entry.getValue());
+            }
+            httpPost.setEntity(new StringEntity(postData.toString(), "UTF-8"));
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            result = EntityUtils.toByteArray(entity);
+        } catch (ConnectionPoolTimeoutException e) {
+            log.error("http get throw ConnectionPoolTimeoutException(wait time out)", e);
+        } catch (ConnectTimeoutException e) {
+        	log.error("http get throw ConnectTimeoutException", e);
+        } catch (SocketTimeoutException e) {
+        	log.error("http get throw SocketTimeoutException", e);
+        } catch (Exception e) {
+        	log.error("http get throw Exception", e);
+        } finally {
+            httpPost.releaseConnection();
+        }
+        return result;
+    }
 
 }

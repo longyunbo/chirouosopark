@@ -125,6 +125,7 @@ public class KjGoodsService {
 					User user = userMap.get(groupId);
 					userVo.setPrice(pu.getPrice());
 					userVo.setCode(pu.getKjcode());
+					userVo.setIsHeader(pu.getIsHeader());
 					userVo.setStatus(pu.getKjstatus());
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
@@ -320,6 +321,7 @@ public class KjGoodsService {
 							UserVo userVo = new UserVo();
 							userVo.setPrice(pu.getPrice());
 							userVo.setCode(pu.getKjcode());
+							userVo.setIsHeader(pu.getIsHeader());
 							userVo.setStatus(pu.getKjstatus());
 							int uid = pu.getUid();
 							User user = userMap.get(uid);

@@ -1,6 +1,13 @@
 package com.drag.chirouosopark.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -116,4 +123,42 @@ public class WxUtil {
 		}
 		return flag;
 	}
+	
+	/**
+	 * 获取二维码
+	 * @param code
+	 * @param page
+	 */
+	public static void getPoster(HttpServletRequest request,HttpServletResponse response){
+    	String token = getAccessToken();
+    	String requestUrl = String.format("https://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token=%s", token);
+        JSONObject json = new JSONObject();
+        String code = request.getParameter("code");
+        String page = request.getParameter("page");
+		json.put("scene", code);
+		json.put("page", page);
+		json.put("width", 430);
+		json.put("auto_color", true);
+		json.put("is_hyaline", true);
+		 //执行post 获取数据流
+        byte[] result = HttpsUtil.doImgPost(requestUrl, json);
+        //输出图片到页面
+        PrintWriter out = null;
+		try {
+			out = response.getWriter();
+			response.reset();
+			InputStream is = new ByteArrayInputStream(result);
+			int a = is.read();
+			while (a != -1) {
+				out.print((char) a);
+				a = is.read();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			out.flush();
+			out.close();
+		}
+    }
+	
 }

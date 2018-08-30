@@ -117,6 +117,7 @@ public class ZlGoodsService {
 					int groupId = pu.getGrouperId();
 					User user = userMap.get(groupId);
 					userVo.setCode(pu.getZlcode());
+					userVo.setIsHeader(pu.getIsHeader());
 					userVo.setStatus(pu.getZlstatus());
 					if(user != null) {
 						BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
@@ -270,7 +271,7 @@ public class ZlGoodsService {
 					this.copyProperties(goods, detailVo);
 					detailVo.setGroupStartTime(DateUtil.format(grouper.getCreateTime(), "yyyy-MM-dd HH:mm:ss")); 
 					//根据商品编号，助力code，查询好友助力信息
-					groupers = zlUserDao.findByZlGoodsIdAndIsHeadAndZlCode(zlgoodsId,ZlUser.ISHEADER_NO,zlcode);
+					groupers = zlUserDao.findByZlCode(zlcode);
 					if(groupers != null && groupers.size() > 0) {
 						Map<Integer,User> userMap = new HashMap<Integer,User>();
 						Set<Integer> ids = new HashSet<Integer>();
@@ -289,6 +290,7 @@ public class ZlGoodsService {
 							int uid = pu.getUid();
 							User user = userMap.get(uid);
 							userVo.setCode(pu.getZlcode());
+							userVo.setIsHeader(pu.getIsHeader());
 							userVo.setStatus(pu.getZlstatus());
 							if(user != null) {
 								BeanUtils.copyProperties(user, userVo,new String[]{"createTime"});
